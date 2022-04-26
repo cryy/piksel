@@ -1,6 +1,6 @@
 <h1>piksel</h1>
 <h5 align="center">
-    EN | <a href="../README_HR.md">HR</a>
+    EN | <a href="../main/README_HR.md">HR</a>
 </h5>
 
 <p align ="center">
