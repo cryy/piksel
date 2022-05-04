@@ -1,0 +1,56 @@
+{
+  "name": "piksel",
+  "version": "0.0.1",
+  "description": "A daily-driver app for students.",
+  "main": "./dist/main.js",
+  "scripts": {
+    "start": "npx --no-install electron ./dist/main.js",
+    "dev": "npx --no-install rimraf dist && concurrently \"npm run dev:electron\" \"npm run dev:react\"",
+    "dev:react": "npx --no-install cross-env NODE_ENV=development && npx --no-install webpack-cli --config ./webpack/react.config.js --mode development --progress --color",
+    "dev:electron": "npx --no-install cross-env NODE_ENV=development && npx --no-install webpack-cli --config ./webpack/electron.config.js --mode development --progress --color",
+    "rebuild": "electron-rebuild",
+    "prod": "npx --no-install rimraf dist && concurrently \"npm run prod:electron\" \"npm run prod:react\"",
+    "prod:react": "npx --no-install cross-env NODE_ENV=production && npx --no-install webpack-cli --config ./webpack/react.config.js --mode production --progress --color",
+    "prod:electron": "npx --no-install cross-env NODE_ENV=production && npx --no-install webpack-cli --config ./webpack/electron.config.js --mode production --progress --color "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cryy/piksel.git"
+  },
+  "author": "cryy",
+  "license": "GPLV3",
+  "bugs": {
+    "url": "https://github.com/cryy/piksel/issues"
+  },
+  "homepage": "https://github.com/cryy/piksel#readme",
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@babel/runtime": "^7.17.9",
+    "@types/react": "^18.0.8",
+    "@types/react-dom": "^18.0.3",
+    "@types/react-router-dom": "^5.3.3",
+    "babel-loader": "^8.2.5",
+    "concurrently": "^7.1.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "electron": "^18.2.0",
+    "electron-rebuild": "^3.2.7",
+    "html-webpack-plugin": "^5.5.0",
+    "node-gyp": "^9.0.0",
+    "node-loader": "^2.0.0",
+    "prettier": "^2.6.2",
+    "style-loader": "^3.3.1",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
