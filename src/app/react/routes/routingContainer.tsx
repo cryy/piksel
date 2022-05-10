@@ -28,6 +28,7 @@ export function RoutingContainer() {
         >
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/experimental" element={"This is an experimental page"} />
             </Routes>
             <Box sx={{ marginTop: "100px" }}>
                 Debug tools

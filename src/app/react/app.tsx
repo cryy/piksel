@@ -1,8 +1,8 @@
+import { AppWrapper, RouteListener } from "./components";
 import { Context, context } from "./context";
 import { LanguageType, ServiceContainer, ThemeMode } from "./services";
 import React, { useEffect, useState } from "react";
 
-import { AppWrapper } from "./components";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 
@@ -16,6 +16,8 @@ export function App(props: AppProps) {
     const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
     const [languageType, setLanguageType] = useState<LanguageType>("en");
     const [hour, setHour] = useState(new Date().getHours());
+
+    console.log("re-render");
 
     useEffect(() => {
         const rootElement = document.querySelector(":root") as HTMLElement;
@@ -46,6 +48,7 @@ export function App(props: AppProps) {
         <ThemeProvider theme={ctx.theme}>
             <CssBaseline />
             <context.Provider value={ctx}>
+                <RouteListener />
                 <AppWrapper />
             </context.Provider>
         </ThemeProvider>
