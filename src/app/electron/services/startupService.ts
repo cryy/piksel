@@ -1,5 +1,7 @@
-import { BrowserWindow, app, screen, shell } from "electron";
+import { app, screen, shell } from "electron";
 
+import { BrowserWindow } from "glasstron";
+import os from "os";
 import path from "path";
 import url from "url";
 
@@ -10,11 +12,43 @@ export class StartupService {
     private _started: boolean;
     private _ready: boolean;
 
+    private _macNameMap: Map<number, string[]>;
+
     constructor() {
         this._window = null;
 
         this._started = false;
         this._ready = false;
+
+        this._macNameMap = new Map([
+            [20, ["Big Sur", "11"]],
+            [19, ["Catalina", "10.15"]],
+            [18, ["Mojave", "10.14"]],
+            [17, ["High Sierra", "10.13"]],
+            [16, ["Sierra", "10.12"]],
+            [15, ["El Capitan", "10.11"]],
+            [14, ["Yosemite", "10.10"]],
+            [13, ["Mavericks", "10.9"]],
+            [12, ["Mountain Lion", "10.8"]],
+            [11, ["Lion", "10.7"]],
+            [10, ["Snow Leopard", "10.6"]],
+            [9, ["Leopard", "10.5"]],
+            [8, ["Tiger", "10.4"]],
+            [7, ["Panther", "10.3"]],
+            [6, ["Jaguar", "10.2"]],
+            [5, ["Puma", "10.1"]],
+        ]);
+    }
+
+    private getMacVer(release?: any) {
+        release = Number((release || os.release()).split(".")[0]);
+
+        const [name, version] = this._macNameMap.get(release) as any;
+
+        return {
+            name,
+            version,
+        };
     }
 
     private createWindow() {
@@ -36,8 +70,8 @@ export class StartupService {
             minHeight: 251,
             center: true,
             frame: false,
-            show: true,
-            transparent: false,
+            show: false,
+            transparent: true,
             webPreferences: {
                 nodeIntegration: true,
                 devTools: true,
@@ -45,6 +79,8 @@ export class StartupService {
             title: "piksel",
             fullscreenable: false,
         });
+
+        this.blur();
         
         this._window.webContents.on("will-navigate", (e: any) => {
             e.preventDefault();
@@ -71,6 +107,44 @@ export class StartupService {
             })}`
         );
 
+    }
+
+    private async setBlur(b: boolean) {
+        try {
+            await this._window!.setBlur(b);
+        } catch {}
+    }
+
+    private blur() {
+        if (this._window) {
+            switch (os.type()) {
+                case "Windows_NT":
+                    this._window.blurType = "blurbehind";
+                    break;
+                case "Darwin":
+                    switch (this.getMacVer().version) {
+                        case "10.10":
+                            this._window.vibrancy = "dark";
+                            break;
+                        case "10.11":
+                        case "10.12":
+                        case "10.13":
+                            this._window.vibrancy = "sidebar";
+                            break;
+                        case "10.14":
+                        case "10.15":
+                        case "11":
+                            this._window.vibrancy = "fullscreen-ui";
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            this.setBlur(true);
+        }
     }
 
     private async ready() {
