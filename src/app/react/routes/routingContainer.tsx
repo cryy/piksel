@@ -1,17 +1,17 @@
-import { LangChanger, ThemeChanger } from "../components";
+import { HourChanger, LangChanger, ThemeChanger } from "../components";
+import { Route, Routes } from "react-router-dom";
 
 import { Box } from "@mui/material";
+import { Home } from ".";
 import React from "react";
 import { useContext } from "../hooks";
 
 export function RoutingContainer() {
     const {
         theme: {
-            palette: { mode },
+            palette: { background },
         },
     } = useContext();
-
-    const backgroundColor = mode == "light" ? "#ffffff" : "#101010";
 
     return (
         <Box
@@ -20,13 +20,21 @@ export function RoutingContainer() {
                 height: "100%",
                 position: "absolute",
                 marginLeft: "76px",
-                backgroundColor: { backgroundColor },
+                background: background.default,
                 borderBottomRightRadius: "6px",
                 borderTopRightRadius: "6px",
+                overflow: "auto"
             }}
         >
-            <ThemeChanger />
-            <LangChanger />
+            <Routes>
+                <Route path="/" element={<Home />} />
+            </Routes>
+            <Box sx={{ marginTop: "100px" }}>
+                Debug tools
+                <LangChanger />
+                <ThemeChanger />
+                <HourChanger />
+            </Box>
         </Box>
     );
 }

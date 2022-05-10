@@ -1,5 +1,8 @@
 export interface Lang {
     helloWorld: string;
+    goodMorning: string;
+    goodAfternoon: string;
+    goodEvening: string;
 };
 
 export class LangService {
@@ -14,13 +17,19 @@ export class LangService {
 
     private createHr(): Lang {
         return {
-            helloWorld: "Bok svijete!"
+            helloWorld: "Bok svijete!",
+            goodMorning: "Dobro jutro!",
+            goodAfternoon: "Dobar dan!",
+            goodEvening: "Dobra večer!"
         }
     }
 
     private createEn(): Lang {
         return {
-            helloWorld: "Hello world"
+            helloWorld: "Hello world",
+            goodMorning: "Good morning!",
+            goodAfternoon: "Good afternoon!",
+            goodEvening: "Good evening!"
         }
     }
 

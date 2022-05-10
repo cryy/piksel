@@ -64,24 +64,21 @@ export class StartupService {
 
         const { width, height } = display.workAreaSize;
 
-        const r1 = Math.round(width / 1.98);
-        const r2 = Math.round(height / 2.14);
+        const widthRatio = Math.round(width / 1.85);
+        const heightRatio = Math.round(height / 1.59);
 
-        console.log(os.type());
-        console.log(os.platform());
-        console.log(os.release());
-        const m_width = r1 < 500 ? 500 : r1;
-        const m_height = r2 < 281 ? 281 : r2;
+        const windowWidth = widthRatio < 900 ? 900 : widthRatio;
+        const windowHeight = heightRatio < 460 ? 460 : heightRatio;
 
         const browserOptions: BrowserWindowConstructorOptions = {
-            width: m_width,
-            height: m_height,
-            minWidth: 500,
-            minHeight: 251,
+            width: windowWidth,
+            height: windowHeight,
+            minWidth: 900,
+            minHeight: 460,
             center: true,
             frame: false,
             show: false,
-            transparent: false,
+            transparent: os.type() === "Windows_NT" ? false : true,
             webPreferences: {
                 nodeIntegration: true,
                 devTools: true,

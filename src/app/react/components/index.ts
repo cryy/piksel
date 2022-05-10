@@ -4,3 +4,5 @@ export * from "./langChanger";
 export * from "./themeChanger";
 export * from "./topBar";
 export * from "./windowControls";
+export * from "./greeting";
+export * from "./hourChanger";

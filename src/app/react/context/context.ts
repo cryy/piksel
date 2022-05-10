@@ -7,8 +7,10 @@ export interface Context {
     services: ServiceContainer;
     theme: Theme;
     lang: Lang;
+    hour: number;
     setTheme: (themeMode: ThemeMode) => void;
     setLang: (langType: LanguageType) => void;
+    setHour: (h: number) => void;
 }
 
 export const context = React.createContext<Context | null>(null);

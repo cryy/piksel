@@ -9,7 +9,7 @@ export function SideBar() {
         },
     } = useContext();
 
-    const backgroundColor = mode == "light" ? "#ffffff66" : "#10101066";
+    const backgroundColor = mode == "light" ? "#ffffff66" : "#25272e80";
 
     return (
         <Box
@@ -17,7 +17,7 @@ export function SideBar() {
                 width: "76px",
                 borderTopLeftRadius: "6px",
                 borderBottomLeftRadius: "6px",
-                backgroundColor: { backgroundColor },
+                backgroundColor: backgroundColor,
                 "-webkit-app-region": "drag",
             }}
         ></Box>

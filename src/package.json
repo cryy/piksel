@@ -32,7 +32,6 @@
         "electron-frameless-window-plugin": "github:cryy/electron-frameless-window-plugin",
         "glasstron": "^0.1.1",
         "react": "^18.1.0",
-        "react-awesome-shapes": "^0.1.12",
         "react-dom": "^18.1.0",
         "react-router-dom": "^6.3.0",
         "recoil": "^0.7.2"
@@ -60,6 +59,7 @@
         "prettier": "^2.6.2",
         "style-loader": "^3.3.1",
         "typescript": "^4.6.4",
+        "url-loader": "^4.1.1",
         "webpack": "^5.72.0",
         "webpack-cli": "^4.9.2"
     },
