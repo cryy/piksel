@@ -1,11 +1,15 @@
-import { app, screen, shell } from "electron";
+import { app, BrowserWindowConstructorOptions, screen, shell } from "electron";
 
 import { BrowserWindow } from "glasstron";
 import os from "os";
 import path from "path";
 import url from "url";
+import { Command } from "../../ipc";
+import { IPCService } from ".";
+import { plugin } from "electron-frameless-window-plugin";
 
 export class StartupService {
+    private _ipc: IPCService;
 
     private _window: BrowserWindow | null;
 
@@ -14,7 +18,9 @@ export class StartupService {
 
     private _macNameMap: Map<number, string[]>;
 
-    constructor() {
+    constructor(ipc: IPCService) {
+        this._ipc = ipc;
+
         this._window = null;
 
         this._started = false;
@@ -38,6 +44,8 @@ export class StartupService {
             [6, ["Jaguar", "10.2"]],
             [5, ["Puma", "10.1"]],
         ]);
+
+        this._ipc.receive<Command>(this.ipcHandler.bind(this));
     }
 
     private getMacVer(release?: any) {
@@ -59,11 +67,13 @@ export class StartupService {
         const r1 = Math.round(width / 1.98);
         const r2 = Math.round(height / 2.14);
 
+        console.log(os.type());
+        console.log(os.platform());
+        console.log(os.release());
         const m_width = r1 < 500 ? 500 : r1;
         const m_height = r2 < 281 ? 281 : r2;
 
-
-        this._window = new BrowserWindow({
+        const browserOptions: BrowserWindowConstructorOptions = {
             width: m_width,
             height: m_height,
             minWidth: 500,
@@ -71,17 +81,28 @@ export class StartupService {
             center: true,
             frame: false,
             show: false,
-            transparent: true,
+            transparent: false,
             webPreferences: {
                 nodeIntegration: true,
                 devTools: true,
+                contextIsolation: false,
             },
             title: "piksel",
             fullscreenable: false,
-        });
+        };
+
+        this._window = new BrowserWindow(browserOptions);
 
         this.blur();
-        
+
+        /*
+        currently buggy with this electron version
+        plugin({
+            browserWindow: this._window,
+            options: browserOptions
+        });
+        */
+
         this._window.webContents.on("will-navigate", (e: any) => {
             e.preventDefault();
         });
@@ -106,7 +127,6 @@ export class StartupService {
                 slashes: true,
             })}`
         );
-
     }
 
     private async setBlur(b: boolean) {
@@ -119,6 +139,11 @@ export class StartupService {
         if (this._window) {
             switch (os.type()) {
                 case "Windows_NT":
+                    /*
+                    blurbehind causes window lag on win11, acrylic causes window lag on win10
+                    should do a windows version check however
+                    https://github.com/nodejs/node/issues/40862
+                    */
                     this._window.blurType = "blurbehind";
                     break;
                 case "Darwin":
@@ -148,10 +173,37 @@ export class StartupService {
     }
 
     private async ready() {
-        console.log("ready")
+        console.log("ready");
 
         this._ready = true;
         this._window?.show();
+    }
+
+    private async ipcHandler(command: Command) {
+        switch (command.name) {
+            case "WIN_MAX":
+                if (this._window?.isMaximized()) {
+                    this._window?.unmaximize();
+                } else {
+                    if (this._window?.isMaximizable()) {
+                        this._window?.maximize();
+                    }
+                }
+                break;
+            case "WIN_MIN":
+                if (this._window?.isMinimizable()) this._window.minimize();
+                break;
+            case "WIN_CLS":
+                this._window?.close();
+                break;
+            case "SHOW":
+                setTimeout(() => {
+                    this._window?.show();
+                }, 2100);
+                break;
+            default:
+                break;
+        }
     }
 
     public start() {
@@ -159,10 +211,7 @@ export class StartupService {
             this._started = true;
 
             app.on("ready", () =>
-                setTimeout(
-                    this.createWindow.bind(this),
-                    process.platform === "linux" ? 1000 : 0
-                )
+                setTimeout(this.createWindow.bind(this), process.platform === "linux" ? 1000 : 0)
             );
 
             app.on("window-all-closed", () => {
@@ -183,5 +232,4 @@ export class StartupService {
             });
         }
     }
-
 }

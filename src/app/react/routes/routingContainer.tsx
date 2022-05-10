@@ -16,8 +16,10 @@ export function RoutingContainer() {
     return (
         <Box
             sx={{
-                width: "100%",
+                width: "calc(100% - 76px)",
                 height: "100%",
+                position: "absolute",
+                marginLeft: "76px",
                 backgroundColor: { backgroundColor },
                 borderBottomRightRadius: "6px",
                 borderTopRightRadius: "6px",

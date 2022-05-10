@@ -1,7 +1,8 @@
+import { SideBar, TopBar } from ".";
+
 import { Box } from "@mui/system";
 import React from "react";
 import { RoutingContainer } from "../routes";
-import { SideBar } from ".";
 
 export function AppWrapper() {
     return (
@@ -14,6 +15,7 @@ export function AppWrapper() {
             }}
         >
             <SideBar />
+            <TopBar />
             <RoutingContainer />
         </Box>
     );
