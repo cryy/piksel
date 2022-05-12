@@ -1,15 +1,16 @@
 import { Box } from "@mui/material";
 import React from "react";
-import { useContext } from "../hooks";
+import { SideBarRouter } from ".";
+import { useAppContext } from "../hooks";
 
 export function SideBar() {
     const {
         theme: {
             palette: { mode },
         },
-    } = useContext();
+    } = useAppContext();
 
-    const backgroundColor = mode == "light" ? "#ffffff66" : "#25272e80";
+    const backgroundColor = mode == "light" ? "#ffffffca" : "#25272ec0";
 
     return (
         <Box
@@ -20,6 +21,8 @@ export function SideBar() {
                 backgroundColor: backgroundColor,
                 "-webkit-app-region": "drag",
             }}
-        ></Box>
+        >
+            <SideBarRouter />
+        </Box>
     );
 }

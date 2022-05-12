@@ -1,5 +1,5 @@
+import { AppContext, appContext } from "./context";
 import { AppWrapper, RouteListener } from "./components";
-import { Context, context } from "./context";
 import { LanguageType, ServiceContainer, ThemeMode } from "./services";
 import React, { useEffect, useState } from "react";
 
@@ -34,10 +34,10 @@ export function App(props: AppProps) {
         }
     }, [themeMode]);
 
-    const ctx: Context = {
+    const ctx: AppContext = {
         services: props.services,
-        lang: languageType == "en" ? services.langService.en : services.langService.hr,
-        theme: themeMode == "dark" ? services.themeService.dark : services.themeService.light,
+        lang: languageType == "en" ? services.lang.en : services.lang.hr,
+        theme: themeMode == "dark" ? services.theme.dark : services.theme.light,
         setTheme: setThemeMode,
         setLang: setLanguageType,
         hour: hour,
@@ -47,10 +47,10 @@ export function App(props: AppProps) {
     return (
         <ThemeProvider theme={ctx.theme}>
             <CssBaseline />
-            <context.Provider value={ctx}>
+            <appContext.Provider value={ctx}>
                 <RouteListener />
                 <AppWrapper />
-            </context.Provider>
+            </appContext.Provider>
         </ThemeProvider>
     );
 }

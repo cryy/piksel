@@ -1,17 +1,5 @@
 import { Theme, createTheme, responsiveFontSizes } from "@mui/material/styles";
 
-declare module "@mui/material/styles/createTypography" {
-    interface TypographyOptions {
-        fontWeightSemiBold?: number;
-        fontWeightExtraBold?: number;
-    }
-
-    interface Typography {
-        fontWeightSemiBold: number;
-        fontWeightExtraBold: number;
-    }
-}
-
 export class ThemeService {
     private _default: Theme;
     private _dark: Theme;

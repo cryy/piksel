@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
 import React from "react";
-import { useContext } from "../hooks";
+import { useAppContext } from "../hooks";
 import { useSetRecoilState } from "recoil";
 
 export function LangChanger() {
-    const { setLang } = useContext();
+    const { setLang } = useAppContext();
 
     const light = (e: any) => {
         setLang("en");

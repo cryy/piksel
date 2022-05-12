@@ -2,11 +2,11 @@ import { Button, Link } from "@mui/material";
 
 import React from "react";
 import { Link as RouterLink } from 'react-router-dom';
-import { useContext } from "../hooks";
+import { useAppContext } from "../hooks";
 import { useSetRecoilState } from "recoil";
 
 export function ThemeChanger() {
-    const { setTheme } = useContext();
+    const { setTheme } = useAppContext();
 
     const light = (e: any) => {
         setTheme("light");

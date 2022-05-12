@@ -1,15 +1,15 @@
-import { Context, context } from "../context";
 import React, { useEffect } from "react";
 
+import { useAppContext } from "../hooks";
 import { useLocation } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
 export function RouteListener() {
     const {
         services: {
-            recoilService: { currentRoute },
+            recoil: { currentRoute },
         },
-    } = React.useContext(context) as Context;
+    } = useAppContext();
     const location = useLocation();
     const setCurrentRoute = useSetRecoilState(currentRoute);
 

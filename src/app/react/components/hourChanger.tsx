@@ -1,11 +1,11 @@
 import { Button, TextField } from "@mui/material";
 
 import React from "react";
-import { useContext } from "../hooks";
+import { useAppContext } from "../hooks";
 import { useSetRecoilState } from "recoil";
 
 export function HourChanger() {
-    const { setHour } = useContext();
+    const { setHour } = useAppContext();
 
     const [hours, setHours] = React.useState<string>("");
 

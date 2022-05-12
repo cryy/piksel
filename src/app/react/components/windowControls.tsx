@@ -2,7 +2,7 @@ import { Box, Grid, IconButton, styled } from "@mui/material";
 import { CloseRounded, CropSquareRounded, MinimizeRounded } from "@mui/icons-material";
 
 import React from "react";
-import { useContext } from "../hooks";
+import { useAppContext } from "../hooks";
 
 export const ControlButton = styled(IconButton)({
     width: "100%",
@@ -17,7 +17,7 @@ export const ControlButton = styled(IconButton)({
 export function WindowControls() {
     const {
         services: { ipc },
-    } = useContext();
+    } = useAppContext();
 
     return (
         <Box

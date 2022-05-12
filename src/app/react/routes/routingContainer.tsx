@@ -4,14 +4,17 @@ import { Route, Routes } from "react-router-dom";
 import { Box } from "@mui/material";
 import { Home } from ".";
 import React from "react";
-import { useContext } from "../hooks";
+import { useAppContext } from "../hooks";
 
 export function RoutingContainer() {
     const {
         theme: {
             palette: { background },
         },
-    } = useContext();
+        services: {
+            routes: { routes },
+        },
+    } = useAppContext();
 
     return (
         <Box
@@ -23,12 +26,13 @@ export function RoutingContainer() {
                 background: background.default,
                 borderBottomRightRadius: "6px",
                 borderTopRightRadius: "6px",
-                overflow: "auto"
+                overflow: "auto",
             }}
         >
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/experimental" element={"This is an experimental page"} />
+                {routes.map((route) => (
+                    <Route key={route.path} path={route.path} element={route.component()} />
+                ))}
             </Routes>
             <Box sx={{ marginTop: "100px" }}>
                 Debug tools
