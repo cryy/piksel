@@ -1,8 +1,8 @@
 import { Box, IconButton, IconButtonProps, Link, Palette, Typography, styled } from "@mui/material";
+import { Link as RouteLink, useLocation } from "react-router-dom";
 
 import { Typography as CreateTypography } from "@mui/material/styles/createTypography";
 import React from "react";
-import { Link as RouteLink } from "react-router-dom";
 import { keyframes } from "@mui/system";
 import { useAppContext } from "../hooks";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,6 @@ const iconActiveStyles = (palette: Palette) => ({
     color: palette.primary.main,
 });
 
-
 const routeTransitionSelect = (palette: Palette) =>
     keyframes({
         from: iconUnactiveStyles(palette),
@@ -35,65 +34,58 @@ const routeTransitionDeselect = (palette: Palette) =>
         to: iconUnactiveStyles(palette),
     });
 
-export const SideBarButton = styled(IconButton)(
-    ({ theme: { palette, transitions, typography } }) => ({
-        borderRadius: "4px",
-        width: "60px",
-        height: "60px",
-        flexDirection: "column",
-        opacity: 0.75,
+export const SideBarButton = styled(IconButton)(({ theme: { palette } }) => ({
+    borderRadius: "4px",
+    width: "60px",
+    height: "60px",
+    flexDirection: "column",
+    opacity: 0.75,
+    "& > svg": {
+        ...iconUnactiveStyles(palette),
+        animation: `${routeTransitionDeselect(palette)} 250ms ease-in-out`,
+    },
+    "& > p": {
+        opacity: palette.mode === "dark" ? 0.75 : 1,
+    },
+    "&:hover": {
+        opacity: 1,
+        "& > p": {
+            opacity: 1,
+        },
+    },
+}));
+
+export const ActiveSideBarButton = styled(SideBarButton)(({ theme: { palette } }) => {
+    const background = palette.mode === "dark" ? palette.action.selected : palette.background.paper;
+
+    return {
+        opacity: 1,
+        backgroundColor: background,
         "& > svg": {
-            ...iconUnactiveStyles(palette),
-            animation: `${routeTransitionDeselect(palette)} 300ms ${transitions.easing.easeInOut}`,
+            ...iconActiveStyles(palette),
+            animation: `${routeTransitionSelect(palette)} 250ms ease`,
         },
         "& > p": {
-            opacity: palette.mode === "dark" ? 0.75 : 1,
+            opacity: 0,
         },
         "&:hover": {
-            opacity: 1,
+            backgroundColor: background,
             "& > p": {
-                opacity: 1,
+                opacity: 0,
             },
         },
-    })
-);
-
-export const ActiveSideBarButton = styled(SideBarButton)(
-    ({ theme: { palette, transitions, typography } }) => {
-        const background =
-            palette.mode === "dark" ? palette.action.selected : palette.background.paper;
-
-        return {
-            opacity: 1,
-            backgroundColor: background,
-            "& > svg": {
-                ...iconActiveStyles(palette),
-                animation: `${routeTransitionSelect(palette)} 300ms ${
-                    transitions.easing.easeInOut
-                }`,
-            },
-            "& > p": {
-                opacity: 0
-            },
-            "&:hover": {
-                backgroundColor: background,
-                "& > p": {
-                    opacity: 0,
-                }
-            },
-        };
-    }
-);
+    };
+});
 
 export function SideBarRouter() {
     const {
         services: {
             routes: { routes },
-            recoil: { currentRoute },
         },
+        lang,
     } = useAppContext();
     const navigator = useNavigate();
-    const activeRoute = useRecoilValue(currentRoute);
+    const location = useLocation();
 
     return (
         <Box
@@ -109,15 +101,15 @@ export function SideBarRouter() {
             }}
         >
             {routes.map((r) =>
-                activeRoute === r.path ? (
+                location.pathname === r.path ? (
                     <ActiveSideBarButton key={r.path} onClick={() => navigator(r.path)}>
                         {React.createElement(r.icon as any)}
-                        <Typography variant="body2">{r.name}</Typography>
+                        <Typography variant="body2">{lang[r.name]}</Typography>
                     </ActiveSideBarButton>
                 ) : (
                     <SideBarButton key={r.path} onClick={() => navigator(r.path)}>
                         {React.createElement(r.icon as any)}
-                        <Typography variant="body2">{r.name}</Typography>
+                        <Typography variant="body2">{lang[r.name]}</Typography>
                     </SideBarButton>
                 )
             )}

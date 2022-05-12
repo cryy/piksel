@@ -1,8 +1,11 @@
 export interface Lang {
+    [key: string]: string;
     helloWorld: string;
     goodMorning: string;
     goodAfternoon: string;
     goodEvening: string;
+    homePage: string;
+    experimentalPage: string;
 };
 
 export class LangService {
@@ -20,7 +23,9 @@ export class LangService {
             helloWorld: "Bok svijete!",
             goodMorning: "Dobro jutro!",
             goodAfternoon: "Dobar dan!",
-            goodEvening: "Dobra večer!"
+            goodEvening: "Dobra večer!",
+            homePage: "Početna",
+            experimentalPage: "Eksperimentalno"
         }
     }
 
@@ -29,7 +34,9 @@ export class LangService {
             helloWorld: "Hello world",
             goodMorning: "Good morning!",
             goodAfternoon: "Good afternoon!",
-            goodEvening: "Good evening!"
+            goodEvening: "Good evening!",
+            homePage: "Home",
+            experimentalPage: "Experimental"
         }
     }
 

@@ -1,8 +1,8 @@
 import { AppContext, appContext } from "./context";
-import { AppWrapper, RouteListener } from "./components";
 import { LanguageType, ServiceContainer, ThemeMode } from "./services";
 import React, { useEffect, useState } from "react";
 
+import { AppWrapper } from "./components";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 
@@ -48,7 +48,6 @@ export function App(props: AppProps) {
         <ThemeProvider theme={ctx.theme}>
             <CssBaseline />
             <appContext.Provider value={ctx}>
-                <RouteListener />
                 <AppWrapper />
             </appContext.Provider>
         </ThemeProvider>

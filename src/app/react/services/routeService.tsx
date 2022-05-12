@@ -25,7 +25,7 @@ export class RouteService {
     private createRoutes(): Route[] {
         return [
             {
-                name: "Home",
+                name: "homePage",
                 path: "/",
                 flags: RouteFlags.Null,
                 icon: HomeRounded,
@@ -33,7 +33,7 @@ export class RouteService {
                 subroutes: []
             },
             {
-                name: "Experimental",
+                name: "experimentalPage",
                 path: "/experimental",
                 flags: RouteFlags.Null,
                 icon: ScienceRounded,
