@@ -3,6 +3,7 @@ import { Link as RouteLink, useLocation } from "react-router-dom";
 
 import { Typography as CreateTypography } from "@mui/material/styles/createTypography";
 import React from "react";
+import { RouteFlags } from "../services";
 import { keyframes } from "@mui/system";
 import { useAppContext } from "../hooks";
 import { useNavigate } from "react-router-dom";
@@ -87,6 +88,8 @@ export function SideBarRouter() {
     const navigator = useNavigate();
     const location = useLocation();
 
+    const sideBarRoutes = routes.filter(r => (r.flags & RouteFlags.NoSidebar) !== RouteFlags.NoSidebar);
+
     return (
         <Box
             sx={{
@@ -100,7 +103,7 @@ export function SideBarRouter() {
                 gap: "5vh",
             }}
         >
-            {routes.map((r) =>
+            {sideBarRoutes.map((r) =>
                 location.pathname === r.path ? (
                     <ActiveSideBarButton key={r.path} onClick={() => navigator(r.path)}>
                         {React.createElement(r.icon as any)}

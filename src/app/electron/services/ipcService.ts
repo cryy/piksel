@@ -1,11 +1,12 @@
-import { BrowserWindow } from 'glasstron';
-import { ipcMain } from 'electron-better-ipc';
 import {
     Callback,
     Command,
     CommandReceiver,
     ReceiverCallback,
 } from "../../ipc";
+
+import { BrowserWindow } from 'electron';
+import { ipcMain } from 'electron-better-ipc';
 
 export class IPCService {
     private readonly _channel = "COMMAND";

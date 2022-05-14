@@ -30,11 +30,15 @@
         "@mui/material": "^5.6.4",
         "electron-better-ipc": "^2.0.1",
         "electron-frameless-window-plugin": "github:cryy/electron-frameless-window-plugin",
+        "electron-store": "^8.0.1",
         "glasstron": "^0.1.1",
+        "lodash": "^4.17.21",
+        "object-path": "^0.11.8",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
         "react-router-dom": "^6.3.0",
-        "recoil": "^0.7.2"
+        "recoil": "^0.7.2",
+        "recoil-outside": "^0.1.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.10",
@@ -44,6 +48,8 @@
         "@babel/preset-react": "^7.16.7",
         "@babel/preset-typescript": "^7.16.7",
         "@babel/runtime": "^7.17.9",
+        "@types/lodash": "^4.14.182",
+        "@types/object-path": "^0.11.1",
         "@types/react": "^18.0.8",
         "@types/react-dom": "^18.0.3",
         "@types/react-router-dom": "^5.3.3",

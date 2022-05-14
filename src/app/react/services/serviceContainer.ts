@@ -1,4 +1,4 @@
-import { IPCService, LangService, RecoilService, RouteService, ThemeService } from ".";
+import { ConfigService, IPCService, LangService, RecoilService, RouteService, StartupService, ThemeService } from ".";
 
 export class ServiceContainer {
     private _themeService: ThemeService;
@@ -6,6 +6,8 @@ export class ServiceContainer {
     private _langService: LangService;
     private _ipcService: IPCService;
     private _routeService: RouteService;
+    private _configService: ConfigService;
+    private _startupService: StartupService;
 
     constructor() {
         this._themeService = new ThemeService();
@@ -13,6 +15,8 @@ export class ServiceContainer {
         this._langService = new LangService();
         this._ipcService = new IPCService();
         this._routeService = new RouteService();
+        this._configService = new ConfigService(this._ipcService, this._recoilService);
+        this._startupService = new StartupService(this._recoilService, this._ipcService, this._configService);
     }
 
     public get theme() {
@@ -33,5 +37,13 @@ export class ServiceContainer {
 
     public get routes() {
         return this._routeService;
+    }
+
+    public get startup() {
+        return this._startupService;
+    }
+
+    public get config() {
+        return this._configService;
     }
 }

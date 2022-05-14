@@ -23,7 +23,8 @@ export class ThemeService {
                         main: "#f55790",
                     },
                     background: {
-                        default: "linear-gradient(180deg, rgba(237,240,242,1) 0%, rgba(239,242,244,1) 30%, rgba(236,239,241,1) 55%, rgba(238,240,242,1) 80%, rgba(238,239,242,1) 100%)",
+                        default:
+                            "linear-gradient(180deg, rgba(237,240,242,1) 0%, rgba(239,242,244,1) 30%, rgba(236,239,241,1) 55%, rgba(238,240,242,1) 80%, rgba(238,239,242,1) 100%)",
                         paper: "#fdfdfe",
                     },
                 },
@@ -99,18 +100,34 @@ export class ThemeService {
                         defaultProps: {
                             disableTouchRipple: true,
                         },
+                        styleOverrides: {
+                            root: {
+                                fontFamily: "'Montserrat' !important",
+                            },
+                        },
                     },
                     MuiButton: {
                         defaultProps: {
                             disableElevation: true,
                         },
                     },
+                    MuiPaper: {
+                        defaultProps: {
+                            elevation: 0,
+                        },
+                    },
+                },
+                shape: {
+                    borderRadius: 5,
                 },
             })
         );
     }
 
     private createDarkTheme(): Theme {
+        const paperColor =
+            "linear-gradient(140deg, rgba(48,50,57,1) 0%, rgba(47,50,57,1) 20%, rgba(46,50,60,1) 70%, rgba(46,50,61,1) 100%)";
+
         return responsiveFontSizes(
             createTheme({
                 palette: {
@@ -122,7 +139,8 @@ export class ThemeService {
                         main: "#f55790",
                     },
                     background: {
-                        default: "linear-gradient(140deg, rgba(37,39,46,1) 0%, rgba(35,39,51,1) 30%, rgba(35,39,53,1) 70%, rgba(35,39,54,1) 100%)",
+                        default:
+                            "linear-gradient(140deg, rgba(37,39,46,1) 0%, rgba(35,39,51,1) 30%, rgba(35,39,53,1) 70%, rgba(35,39,54,1) 100%)",
                         paper: "linear-gradient(140deg, rgba(48,50,57,1) 0%, rgba(47,50,57,1) 20%, rgba(46,50,60,1) 70%, rgba(46,50,61,1) 100%)",
                     },
                 },
@@ -198,12 +216,31 @@ export class ThemeService {
                         defaultProps: {
                             disableTouchRipple: true,
                         },
+                        styleOverrides: {
+                            root: {
+                                fontFamily: "'Montserrat' !important",
+                            },
+                        },
                     },
                     MuiButton: {
                         defaultProps: {
                             disableElevation: true,
                         },
                     },
+                    MuiPaper: {
+                        defaultProps: {
+                            elevation: 0,
+                        },
+                        styleOverrides: {
+                            root: {
+                                backgroundColor: "unset",
+                                background: paperColor,
+                            },
+                        },
+                    },
+                },
+                shape: {
+                    borderRadius: 5,
                 },
             })
         );

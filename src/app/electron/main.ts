@@ -7,5 +7,5 @@ if (!lock) app.quit();
 else {
     const services = new ServiceContainer();
 
-    services.startupService.start();
+    services.startup.start();
 }

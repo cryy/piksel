@@ -1,30 +1,50 @@
-import { app, BrowserWindowConstructorOptions, screen, shell } from "electron";
+import { BootFlags, Command } from "../../ipc";
+import {
+    BrowserWindowConstructorOptions,
+    Menu,
+    Notification,
+    Tray,
+    app,
+    screen,
+    shell,
+} from "electron";
+import { ConfigService, IPCService, LangService } from ".";
 
 import { BrowserWindow } from "glasstron";
 import os from "os";
 import path from "path";
-import url from "url";
-import { Command } from "../../ipc";
-import { IPCService } from ".";
 import { plugin } from "electron-frameless-window-plugin";
+import url from "url";
 
 export class StartupService {
     private _ipc: IPCService;
+    private _lang: LangService;
+    private _config: ConfigService;
 
     private _window: BrowserWindow | null;
+    private _tray: Tray | null;
+    private _bootFlags: BootFlags;
 
     private _started: boolean;
     private _ready: boolean;
 
+    private _iconsPath: string;
+
     private _macNameMap: Map<number, string[]>;
 
-    constructor(ipc: IPCService) {
+    constructor(ipc: IPCService, lang: LangService, config: ConfigService) {
         this._ipc = ipc;
+        this._lang = lang;
+        this._config = config;
 
         this._window = null;
+        this._tray = null;
+        this._bootFlags = BootFlags.None;
 
         this._started = false;
         this._ready = false;
+
+        this._iconsPath = path.join(__dirname, `../build/icons`);
 
         this._macNameMap = new Map([
             [20, ["Big Sur", "11"]],
@@ -46,6 +66,25 @@ export class StartupService {
         ]);
 
         this._ipc.receive<Command>(this.ipcHandler.bind(this));
+    }
+
+    private getIconName(size?: number) {
+        const sizeString = size ? `${size}x${size}.png` : undefined;
+
+        switch (os.type()) {
+            case "Windows_NT":
+                return sizeString ?? "icon.ico";
+            case "Linux":
+                return sizeString ?? "256x256.png";
+            case "Darwin":
+                return sizeString ?? "icon.icns";
+            default:
+                return "";
+        }
+    }
+
+    private getIconPath(size?: number) {
+        return path.join(this._iconsPath, this.getIconName(size));
     }
 
     private getMacVer(release?: any) {
@@ -86,11 +125,21 @@ export class StartupService {
             },
             title: "piksel",
             fullscreenable: false,
+            icon: this.getIconPath(),
         };
 
         this._window = new BrowserWindow(browserOptions);
 
-        this.blur();
+        this.setupBlur();
+
+        if (
+            ((this._bootFlags & BootFlags.BlurSupported) === BootFlags.BlurSupported ||
+                os.type() === "Linux") &&
+            this._config.store.blur
+        )
+            this.setBlur(true).then((result) => {
+                if (!result) this._bootFlags = this._bootFlags | ~BootFlags.BlurSupported;
+            });
 
         /*
         currently buggy with this electron version
@@ -124,38 +173,94 @@ export class StartupService {
                 slashes: true,
             })}`
         );
+
+        this._ipc.window = this._window;
+        this._config.window = this._window;
+    }
+
+    private createTray() {
+        this._tray = new Tray(this.getIconPath());
+        this._tray.setToolTip("Piksel");
+        this._tray.setContextMenu(this.buildContextMenu(true));
+    }
+
+    private buildContextMenu(boot: boolean = false) {
+        const hidden = boot ? false : !this._window?.isVisible();
+
+        return Menu.buildFromTemplate([
+            {
+                label: "Piksel",
+                type: "normal",
+                icon: this.getIconPath(16),
+                enabled: false,
+            },
+            {
+                type: "separator",
+            },
+            {
+                label: hidden ? this._lang.current.showPiksel : this._lang.current.minimizeToTray,
+                type: "normal",
+                click: () => {
+                    if (hidden) {
+                        this._window?.showInactive();
+                        this._window?.moveTop();
+                    } else {
+                        this._window?.hide();
+                    }
+                    this._tray?.setContextMenu(this.buildContextMenu());
+                },
+            },
+            {
+                label: this._lang.current.exit,
+                type: "normal",
+                click: () => {
+                    this._window?.close();
+                },
+            },
+        ]);
     }
 
     private async setBlur(b: boolean) {
         try {
             await this._window!.setBlur(b);
-        } catch {}
+            return true;
+        } catch {
+            return false;
+        }
     }
 
-    private blur() {
+    private setupBlur() {
         if (this._window) {
             switch (os.type()) {
                 case "Windows_NT":
-                    /*
+                    const ver = os.version();
+                    //futureproofing
+                    if (ver.startsWith("Windows 10") || ver.startsWith("Windows 11")) {
+                        /*
                     blurbehind causes window lag on win11, acrylic causes window lag on win10
                     should do a windows version check however
                     https://github.com/nodejs/node/issues/40862
                     */
-                    this._window.blurType = "blurbehind";
+                        this._bootFlags = this._bootFlags | BootFlags.BlurSupported;
+                        this._window.blurType = "blurbehind";
+                    }
                     break;
                 case "Darwin":
                     switch (this.getMacVer().version) {
                         case "10.10":
+                            this._bootFlags = this._bootFlags | BootFlags.BlurSupported;
                             this._window.vibrancy = "dark";
                             break;
                         case "10.11":
                         case "10.12":
                         case "10.13":
+                            this._bootFlags = this._bootFlags | BootFlags.BlurSupported;
                             this._window.vibrancy = "sidebar";
                             break;
                         case "10.14":
                         case "10.15":
                         case "11":
+                            this._bootFlags = this._bootFlags | BootFlags.BlurSupported;
                             this._window.vibrancy = "fullscreen-ui";
                             break;
                         default:
@@ -165,15 +270,19 @@ export class StartupService {
                 default:
                     break;
             }
-            this.setBlur(true);
         }
     }
 
     private async ready() {
         console.log("ready");
-
+        await this._ipc.send({
+            name: "READY",
+            data: {
+                config: this._config.store,
+                bootFlags: this._bootFlags,
+            },
+        });
         this._ready = true;
-        this._window?.show();
     }
 
     private async ipcHandler(command: Command) {
@@ -191,12 +300,21 @@ export class StartupService {
                 if (this._window?.isMinimizable()) this._window.minimize();
                 break;
             case "WIN_CLS":
-                this._window?.close();
+                this._window?.hide();
+                if (this._config.store.notificationOnClose && Notification.isSupported()) {
+                    new Notification({
+                        title: this._lang.current.windowNotificationTitle,
+                        body: this._lang.current.windowNotificationBody,
+                        icon: this.getIconPath(128),
+                    }).show();
+                    this._config.update("notificationOnClose", false);
+                }
+                this._tray?.setContextMenu(this.buildContextMenu());
                 break;
             case "SHOW":
                 setTimeout(() => {
                     this._window?.show();
-                }, 2100);
+                }, 500);
                 break;
             default:
                 break;
@@ -207,9 +325,10 @@ export class StartupService {
         if (!this._started) {
             this._started = true;
 
-            app.on("ready", () =>
-                setTimeout(this.createWindow.bind(this), process.platform === "linux" ? 1000 : 0)
-            );
+            app.on("ready", () => {
+                this.createTray();
+                setTimeout(this.createWindow.bind(this), process.platform === "linux" ? 1000 : 0);
+            });
 
             app.on("window-all-closed", () => {
                 app.quit();

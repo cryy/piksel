@@ -1,11 +1,20 @@
 export interface Lang {
     [key: string]: string;
-    helloWorld: string;
+    type: string;
     goodMorning: string;
     goodAfternoon: string;
     goodEvening: string;
     homePage: string;
-    experimentalPage: string;
+    tasksPage: string;
+    remindersPage: string;
+    ednevnikPage: string;
+    settingsPage: string;
+    language: string;
+    theme: string;
+    dark: string;
+    light: string;
+    blur: string;
+    carnetIntegration: string;
 };
 
 export class LangService {
@@ -20,23 +29,41 @@ export class LangService {
 
     private createHr(): Lang {
         return {
-            helloWorld: "Bok svijete!",
+            type: "hr",
             goodMorning: "Dobro jutro!",
             goodAfternoon: "Dobar dan!",
             goodEvening: "Dobra večer!",
             homePage: "Početna",
-            experimentalPage: "Eksperimentalno"
+            tasksPage: "Zadaci",
+            remindersPage: "Podsjetnici",
+            ednevnikPage: "eDnevnik",
+            settingsPage: "Postavke",
+            language: "Jezik",
+            theme: "Tema",
+            dark: "Tamna",
+            light: "Svijetla",
+            blur: "Zamućivanje prozora",
+            carnetIntegration: "CARNet integracija"
         }
     }
 
     private createEn(): Lang {
         return {
-            helloWorld: "Hello world",
+            type: "en",
             goodMorning: "Good morning!",
             goodAfternoon: "Good afternoon!",
             goodEvening: "Good evening!",
             homePage: "Home",
-            experimentalPage: "Experimental"
+            tasksPage: "Tasks",
+            remindersPage: "Reminders",
+            ednevnikPage: "eDnevnik",
+            settingsPage: "Settings",
+            language: "Language",
+            theme: "Theme",
+            dark: "Dark",
+            light: "Light",
+            blur: "Window blur",
+            carnetIntegration: "CARNet integration"
         }
     }
 
