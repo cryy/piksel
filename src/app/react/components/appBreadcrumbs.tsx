@@ -35,7 +35,7 @@ export function AppBreadcrumbs() {
                                 
                                 return last ? (
                                     <Typography color="text.primary" variant="h5" key={value.link}>
-                                        {value.name}
+                                        {value.useLang ? lang[value.name] : value.name}
                                     </Typography>
                                 ) : (
                                     <Link
@@ -45,7 +45,7 @@ export function AppBreadcrumbs() {
                                         to={value.link}
                                         key={value.link}
                                     >
-                                        {value.name}
+                                       {value.useLang ? lang[value.name] : value.name}
                                     </Link>
                                 );
                             })}

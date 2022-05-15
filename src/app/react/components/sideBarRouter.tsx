@@ -35,8 +35,8 @@ const routeTransitionDeselect = (palette: Palette) =>
         to: iconUnactiveStyles(palette),
     });
 
-export const SideBarButton = styled(IconButton)(({ theme: { palette } }) => ({
-    borderRadius: "4px",
+export const SideBarButton = styled(IconButton)(({ theme: { palette, shape } }) => ({
+    borderRadius: shape.borderRadius,
     width: "60px",
     height: "60px",
     flexDirection: "column",
@@ -87,8 +87,10 @@ export function SideBarRouter() {
     } = useAppContext();
     const navigator = useNavigate();
     const location = useLocation();
+    
+    const primaryLocation = location.pathname.split("/")[1];
 
-    const sideBarRoutes = routes.filter(r => (r.flags & RouteFlags.NoSidebar) !== RouteFlags.NoSidebar);
+    const sideBarRoutes = routes.filter(r => (r.flags & RouteFlags.Subroute) !== RouteFlags.Subroute);
 
     return (
         <Box
@@ -104,7 +106,7 @@ export function SideBarRouter() {
             }}
         >
             {sideBarRoutes.map((r) =>
-                location.pathname === r.path ? (
+                primaryLocation === r.path.split("/")[1] ? (
                     <ActiveSideBarButton key={r.path} onClick={() => navigator(r.path)}>
                         {React.createElement(r.icon as any)}
                         <Typography variant="body2">{lang[r.name]}</Typography>

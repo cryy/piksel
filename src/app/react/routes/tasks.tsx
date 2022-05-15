@@ -5,7 +5,6 @@ import { useAppContext } from "../hooks";
 
 export function Tasks() {
     const {
-        lang,
         services: {
             recoil: { displayLocation, activeBreadcrumbs },
         },
@@ -15,12 +14,12 @@ export function Tasks() {
     const setBreadcrumbs = useSetRecoilState(activeBreadcrumbs);
 
     React.useEffect(() => {
-        console.log("entry");
         if (location?.pathname === "/tasks") {
             setBreadcrumbs([
                 {
-                    name: lang.tasksPage,
+                    name: "tasksPage",
                     link: "/tasks",
+                    useLang: true
                 },
             ]);
         }

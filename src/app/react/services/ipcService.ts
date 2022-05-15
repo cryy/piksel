@@ -47,9 +47,6 @@ export class IPCService {
             };
         }
 
-        console.log("aaaaa");
-        console.log(channel);
-
         const remover = ipcRenderer.answerMain<T, Callback<T2>>(
             channel,
             callback

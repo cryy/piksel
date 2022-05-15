@@ -100,8 +100,6 @@ export class ConfigService {
             },
         });
 
-        console.log(r);
-
         if (r) {
             this.setFromPath(this._config!, path, value);
             await this.updateStates(path);

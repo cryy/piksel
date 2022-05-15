@@ -15,10 +15,14 @@ export interface Lang {
     light: string;
     blur: string;
     carnetIntegration: string;
-};
+    carnetExplanation: string;
+    carnetEmail: string;
+    carnetPassword: string;
+    loginAction: string;
+    loggingIn: string;
+}
 
 export class LangService {
-
     private _hr: Lang;
     private _en: Lang;
 
@@ -43,8 +47,14 @@ export class LangService {
             dark: "Tamna",
             light: "Svijetla",
             blur: "Zamućivanje prozora",
-            carnetIntegration: "CARNet integracija"
-        }
+            carnetIntegration: "CARNet integracija",
+            carnetExplanation:
+                "Kako bi mogli pristupiti vašem eDnevniku, morate se ulogirati s vašim CARNet podacima.\nPiksel sprema vaše podatke u konfiguracijsku datoteku samo da se može ulogirati umjesto vas. Vaši podaci nikada neće biti zloupotrebljeni.",
+            carnetEmail: "CARNet e-pošta",
+            carnetPassword: "CARNet lozinka",
+            loginAction: "Prijavi se",
+            loggingIn: "Prijavljivanje"
+        };
     }
 
     private createEn(): Lang {
@@ -63,8 +73,14 @@ export class LangService {
             dark: "Dark",
             light: "Light",
             blur: "Window blur",
-            carnetIntegration: "CARNet integration"
-        }
+            carnetIntegration: "CARNet integration",
+            carnetExplanation:
+                "To access your eDnevnik, you have to log in with your CARNet login details.\nPiksel stores your details in a configuration file so it can log in instead of you. Your details will never be misused.",
+            carnetEmail: "CARNet e-mail",
+            carnetPassword: "CARNet password",
+            loginAction: "Login",
+            loggingIn: "Logging in"
+        };
     }
 
     public get hr() {

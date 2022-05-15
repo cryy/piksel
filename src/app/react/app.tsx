@@ -1,8 +1,8 @@
 import { AppContext, appContext } from "./context";
+import { AppWrapper, SnackbarListener } from "./components";
 import { Command, Config, LanguageType, ThemeMode } from "../ipc";
 import React, { useEffect, useState } from "react";
 
-import { AppWrapper } from "./components";
 import { CssBaseline } from "@mui/material";
 import { ServiceContainer } from "./services";
 import { ThemeProvider } from "@mui/material/styles";
@@ -16,7 +16,6 @@ export function App(props: AppProps) {
 
     const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
     const [languageType, setLanguageType] = useState<LanguageType>("en");
-    const [hour, setHour] = useState(new Date().getHours());
 
     console.log("re-render");
 
@@ -26,8 +25,6 @@ export function App(props: AppProps) {
         theme: themeMode == "dark" ? services.theme.dark : services.theme.light,
         setTheme: setThemeMode,
         setLang: setLanguageType,
-        hour: hour,
-        setHour: setHour,
     };
 
     ctx.services.config.theme = setThemeMode;
@@ -54,6 +51,7 @@ export function App(props: AppProps) {
         <ThemeProvider theme={ctx.theme}>
             <CssBaseline />
             <appContext.Provider value={ctx}>
+                <SnackbarListener />
                 <AppWrapper />
             </appContext.Provider>
         </ThemeProvider>

@@ -6,7 +6,6 @@ import { useAppContext } from "../hooks";
 export function Reminders() {
 
     const {
-        lang,
         services: {
             recoil: { displayLocation, activeBreadcrumbs },
         },
@@ -19,8 +18,9 @@ export function Reminders() {
         if (location?.pathname === "/reminders") {
             setBreadcrumbs([
                 {
-                    name: lang.remindersPage,
+                    name: "remindersPage",
                     link: "/reminders",
+                    useLang: true
                 },
             ]);
         }

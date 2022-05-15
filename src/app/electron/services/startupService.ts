@@ -274,7 +274,6 @@ export class StartupService {
     }
 
     private async ready() {
-        console.log("ready");
         await this._ipc.send({
             name: "READY",
             data: {

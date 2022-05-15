@@ -1,5 +1,7 @@
-import { Command, Ready } from "../../ipc";
+import { CarnetUpdateState, Command, EDnevnikDetails, Ready } from "../../ipc";
 import { ConfigService, IPCService, RecoilService } from ".";
+
+import { promiseSetRecoil } from "recoil-outside";
 
 export class StartupService {
     private _recoil: RecoilService;
@@ -15,14 +17,23 @@ export class StartupService {
     }
 
     private async ipcHandler(command: Command) {
+        let d;
         switch (command.name) {
             case "READY":
-                const d = command.data as Ready;
+                d = command.data as Ready;
                 this._config.setReady(d);
                 
                 this._ipc.send({
                     name: "SHOW"
                 });
+                break;
+            case "CARNET_LOADING_STATE":
+                d = command.data as CarnetUpdateState;
+                promiseSetRecoil(this._recoil.carnetLoadingPhase, d.state);
+                break;
+            case "EDNEVNIK_UPDATE":
+                d = command.data as EDnevnikDetails;
+                promiseSetRecoil(this._recoil.ednevnik, d);
                 break;
             default:
                 break;

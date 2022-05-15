@@ -118,7 +118,7 @@ export class ThemeService {
                     },
                 },
                 shape: {
-                    borderRadius: 5,
+                    borderRadius: 10,
                 },
             })
         );
@@ -240,7 +240,7 @@ export class ThemeService {
                     },
                 },
                 shape: {
-                    borderRadius: 5,
+                    borderRadius: 10,
                 },
             })
         );

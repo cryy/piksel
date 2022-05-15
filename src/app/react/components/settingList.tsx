@@ -9,7 +9,7 @@ export interface SettingListItemProps {
 
 export function SettingListItem(props: SettingListItemProps) {
     return (
-        <Grid item xs={6} lg={3} display="flex" justifyContent="center" alignItems="center">
+        <Grid item xs={6} md={4} lg={3} xl={2} display="flex" justifyContent="center" alignItems="center">
             {props.children}
         </Grid>
     );
