@@ -125,8 +125,6 @@ export class ThemeService {
     }
 
     private createDarkTheme(): Theme {
-        const paperColor =
-            "linear-gradient(140deg, rgba(48,50,57,1) 0%, rgba(47,50,57,1) 20%, rgba(46,50,60,1) 70%, rgba(46,50,61,1) 100%)";
 
         return responsiveFontSizes(
             createTheme({
@@ -141,7 +139,7 @@ export class ThemeService {
                     background: {
                         default:
                             "linear-gradient(140deg, rgba(37,39,46,1) 0%, rgba(35,39,51,1) 30%, rgba(35,39,53,1) 70%, rgba(35,39,54,1) 100%)",
-                        paper: "linear-gradient(140deg, rgba(48,50,57,1) 0%, rgba(47,50,57,1) 20%, rgba(46,50,60,1) 70%, rgba(46,50,61,1) 100%)",
+                        paper: "#2e323d",
                     },
                 },
                 typography: {
