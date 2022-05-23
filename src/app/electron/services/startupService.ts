@@ -1,8 +1,11 @@
 import {
-    app, BrowserWindowConstructorOptions,
+    app,
+    BrowserWindowConstructorOptions,
     Menu,
-    Notification, screen,
-    shell, Tray
+    Notification,
+    screen,
+    shell,
+    Tray,
 } from "electron";
 import { BrowserWindow } from "glasstron";
 import os from "os";
@@ -10,7 +13,6 @@ import path from "path";
 import url from "url";
 import { ConfigService, IPCService, LangService } from ".";
 import { BootFlags, Command } from "../../ipc";
-
 
 export class StartupService {
     private _ipc: IPCService;

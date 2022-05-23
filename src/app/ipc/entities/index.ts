@@ -9,4 +9,12 @@ export * from "./languageType";
 export * from "./loadingPhase";
 export * from "./subject";
 export * from "./themeMode";
-
+export * from "./absentStatus";
+export * from "./gradeNote";
+export * from "./examMonth";
+export * from "./examDetails";
+export * from "./absenceDetails";
+export * from "./absenceDate";
+export * from "./absences";
+export * from "./schedule";
+export * from "./scheduleDetails";

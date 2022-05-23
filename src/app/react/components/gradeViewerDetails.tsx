@@ -42,7 +42,7 @@ export function GradeViewerDetails({ grade }: GradeViewerDetailsProps) {
                 }}
             >
                 <Typography variant="h6">{grade.schoolName}</Typography>
-                <Typography variant="body1">Razrednik: Bruno Mamuzić</Typography>
+                <Typography variant="body1">Razrednik/ica: {grade.headroomTeacher}</Typography>
             </Box>
         </Box>
     );

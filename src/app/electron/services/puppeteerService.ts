@@ -3,18 +3,21 @@ import puppeteer from "puppeteer-core";
 import pie from "puppeteer-in-electron";
 import { IPCService } from ".";
 import {
+    Absences,
+    AbsentStatus,
     CarnetLoginDetails,
     CarnetUpdateState,
     Command,
     EDnevnikDetails,
+    ExamMonth,
     Grade,
+    GradeNote,
     GradingElement,
     GradingNote,
     LoadingPhase,
     SnackbarData,
-    Subject
+    Subject,
 } from "../../ipc";
-
 
 export interface InternalSubject {
     href: string;
@@ -45,6 +48,48 @@ export interface InternalGrade {
     schoolName: string;
     passingGrade: string;
     href: string;
+}
+
+export interface InternalGradeNote {
+    title: string;
+    content: string;
+}
+
+export interface InternalExamDetails {
+    subject: string;
+    note: string;
+    date: string;
+}
+
+export interface InternalExamMonth {
+    month: string;
+    exams: InternalExamDetails[];
+}
+
+export interface InternalAbsenceDetails {
+    period: string;
+    subject: string;
+    status: AbsentStatus;
+    reason: string;
+}
+
+export interface InternalAbsenceDate {
+    date: string;
+    details: InternalAbsenceDetails[];
+}
+
+export interface InternalAbsences {
+    totalJustified: number;
+    totalUnjustified: number;
+    totalWaiting: number;
+    totalOther: number;
+    total: number;
+    dates: InternalAbsenceDate[];
+}
+
+export interface InternalSchedule {
+    periods: string[];
+    days: string[][];
 }
 
 export class PuppeteerService {
@@ -89,9 +134,9 @@ export class PuppeteerService {
                             message: "wrongDetails",
                             useLang: true,
                             options: {
-                                variant: "error"
-                            }
-                        }
+                                variant: "error",
+                            },
+                        },
                     });
                     this.destroyWindow();
                     return false;
@@ -159,6 +204,7 @@ export class PuppeteerService {
         for (let x = 0; x < grades.length; x++) {
             const grade = grades[x];
             const subjects = await this.fetchSubjects(page, `${this._url}${grade.href}`);
+            const headroomTeacher = await this.fetchHeadroomTeacher(page);
 
             const externalSubjects: Subject[] = [];
 
@@ -169,35 +215,35 @@ export class PuppeteerService {
                     `${this._url}${subject.href}`
                 );
 
-                const externalGradingElments: GradingElement[] =
-                    detailedSubject.gradingElements.map((x) => ({
-                        name: x.name,
-                        grades: x.grades,
-                        isInclusive: x.isInclusive,
-                    }));
-
-                const externalNotes: GradingNote[] = detailedSubject.notes.map((x) => ({
-                    details: x.details,
-                    grade: x.grade,
-                    date: x.date,
-                }));
-
                 externalSubjects.push({
                     name: subject.subjectName,
                     teacherName: subject.teacherName,
                     href: subject.href,
-                    gradingElements: externalGradingElments,
-                    notes: externalNotes,
+                    gradingElements: detailedSubject.gradingElements,
+                    notes: detailedSubject.notes,
                 });
             }
 
+            const notes = await this.fetchGradeNotes(page);
+            const exams = await this.fetchGradeExams(page);
+            const absences = await this.fetchGradeAbsents(page);
+            const schedules = await this.fetchGradeSchedule(page);
+
             externalGrades.push({
                 name: grade.name,
+                headroomTeacher: headroomTeacher,
                 schoolName: grade.schoolName,
                 passingGrade: grade.passingGrade,
                 date: grade.date,
                 href: grade.href,
                 subjects: externalSubjects,
+                notes: notes,
+                exams: exams,
+                absences: absences,
+                schedule: {
+                    morning: schedules[0],
+                    afternoon: schedules[1],
+                },
             });
         }
 
@@ -222,25 +268,29 @@ export class PuppeteerService {
 
         const grades = await page.$$eval(
             ".student-list > .classes > .class-menu-vertical > .class-info",
-            (elements) =>
-                elements.map((el) => {
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");
+                };
+
+                return elements.map((el) => {
                     const gradeInfo = el.getElementsByClassName("school")[0];
 
                     const href = gradeInfo.getAttribute("href")!;
                     const gradeInfoChildren = gradeInfo.children;
 
-                    const gradeName = gradeInfoChildren[0].children[0].textContent!.trim();
-                    const gradeYear = gradeInfoChildren[0].children[1].textContent!.trim();
+                    const gradeName = normalize(gradeInfoChildren[0].children[0].textContent!);
+                    const gradeYear = normalize(gradeInfoChildren[0].children[1].textContent!);
 
-                    const schoolName = gradeInfoChildren[1].textContent!.trim();
+                    const schoolName = normalize(gradeInfoChildren[1].textContent!);
 
                     const classMenu = el.getElementsByClassName("class-menu")[0];
 
                     const passingGradeElement = classMenu.children[1];
 
-                    const passingGrade = passingGradeElement.children[0]
-                        .getElementsByTagName("span")[0]
-                        .textContent!.trim();
+                    const passingGrade = normalize(
+                        passingGradeElement.children[0].getElementsByTagName("span")[0].textContent!
+                    );
 
                     return {
                         name: gradeName,
@@ -249,12 +299,17 @@ export class PuppeteerService {
                         passingGrade: passingGrade,
                         href: href,
                     };
-                })
+                });
+            }
         );
 
-        const studentName = await page.$eval(".user-name", (element) =>
-            element.textContent!.trim()
-        );
+        const studentName = await page.$eval(".user-name", (element) => {
+            const normalize = (str: string) => {
+                return str.trim().replace(/\t/g, "");
+            };
+
+            return normalize(element.textContent!);
+        });
 
         return [studentName, grades];
     }
@@ -263,21 +318,35 @@ export class PuppeteerService {
         await page.goto(url);
         await page.waitForSelector(".cn-logo");
 
-        return await page.$$eval(".content-wrapper > .content > .list > li > a", (elements) =>
-            elements.map((el) => {
+        return await page.$$eval(".content-wrapper > .content > .list > li > a", (elements) => {
+            const normalize = (str: string) => {
+                return str.trim().replace(/\t/g, "");
+            };
+
+            return elements.map((el) => {
+
                 const href = el.getAttribute("href")!;
                 const children = el.children;
 
-                const subjectName = children[0].textContent!.trim();
-                const teacherName = children[1].textContent!.trim();
+                const subjectName = normalize(children[0].textContent!);
+                const teacherName = normalize(children[1].textContent!);
 
                 return {
                     href: href,
                     subjectName: subjectName,
                     teacherName: teacherName,
                 };
-            })
-        );
+            });
+        });
+    }
+
+    private async fetchHeadroomTeacher(page: puppeteer.Page) {
+        return await page.$eval(".school-name > .schoolyear > .black", (el) => {
+            const normalize = (str: string) => {
+                return str.trim().replace(/\t/g, "");
+            };
+            return normalize(el.textContent!);
+        });
     }
 
     private async fetchSubject(
@@ -289,13 +358,18 @@ export class PuppeteerService {
 
         const gradingElements: InternalGradingElement[] = await page.$$eval(
             ".content > .grades-table > .flex-table.row",
-            (elements) =>
-                elements.map((el) => {
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");              
+                };
+            
+                return elements.map((el) => {
+
                     const children = el.children;
 
                     if (el.classList.contains("final-grade")) {
-                        const firstSemester = children[1].textContent!.trim();
-                        const secondSemester = children[2].textContent!.trim();
+                        const firstSemester = normalize(children[1].textContent!);
+                        const secondSemester = normalize(children[2].textContent!);
 
                         return {
                             name: "Zaključeno",
@@ -303,11 +377,11 @@ export class PuppeteerService {
                             isInclusive: true,
                         };
                     } else {
-                        const gradingElement = children[0].textContent!.trim();
+                        const gradingElement = normalize(children[0].textContent!);
                         const grades: string[] = [];
 
                         for (let i = 1; i < children.length; i++) {
-                            const grade = children[i].textContent!.trim();
+                            const grade = normalize(children[i].textContent!);
 
                             grades.push(grade);
                         }
@@ -319,30 +393,229 @@ export class PuppeteerService {
                         };
                     }
                 })
+            }
         );
 
         const notes: InternalNote[] = await page.$$eval(
             ".content > .notes-table > .flex-table.row",
-            (elements) =>
-                elements.map((el) => {
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");
+                };
+
+                return elements.map((el) => {
                     const children = el.children;
 
-                    const details = children[0].textContent!.trim();
-                    const date = children[1].textContent!.trim();
-                    const grade = children[2].textContent!.trim();
+                    const details = normalize(children[0].textContent!);
+                    const date = normalize(children[1].textContent!);
+                    const grade = normalize(children[2].textContent!);
 
                     return {
                         details: details,
                         date: date,
                         grade: grade,
                     };
-                })
+                });
+            }
         );
 
         return {
             gradingElements: gradingElements,
             notes: notes,
         };
+    }
+
+    private async fetchGradeNotes(page: puppeteer.Page) {
+        await page.goto(`${this._url}/notes`);
+        await page.waitForSelector(".cn-logo");
+
+        const notes: InternalGradeNote[] = await page.$eval(".content", (element) => {
+            const normalize = (str: string) => {
+                return str.trim().replace(/\t/g, "");
+            };
+
+            const children = element.children;
+
+            const gradeNotes: InternalGradeNote[] = [];
+
+            for (let i = 0; i < children.length; i += 2) {
+                const title = normalize(children[i].textContent!);
+                const content = normalize(children[i + 1].textContent!);
+
+                gradeNotes.push({
+                    title: title,
+                    content: content,
+                });
+            }
+
+            return gradeNotes;
+        });
+
+        return notes;
+    }
+
+    private async fetchGradeExams(page: puppeteer.Page) {
+        await page.goto(`${this._url}/exam`);
+        await page.waitForSelector(".cn-logo");
+
+        const internalExams: InternalExamMonth[] = await page.$$eval(
+            ".content > .table-container",
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");
+                };
+
+                return elements.map((el) => {
+                    const children = el.children;
+
+                    const month = normalize(children[0].textContent!);
+
+                    const details: InternalExamDetails[] = [];
+
+                    for (let i = 2; i < children.length; i++) {
+                        const examElement = children[i];
+                        const examElementChildren = examElement.children;
+
+                        const subject = normalize(examElementChildren[0].textContent!);
+                        const note = normalize(examElementChildren[1].textContent!);
+                        const date = normalize(examElementChildren[2].textContent!);
+
+                        details.push({
+                            subject: subject,
+                            note: note,
+                            date: date,
+                        });
+                    }
+
+                    return {
+                        month: month,
+                        exams: details,
+                    };
+                });
+            }
+        );
+
+        return internalExams;
+    }
+
+    private async fetchGradeAbsents(page: puppeteer.Page): Promise<InternalAbsences> {
+        await page.goto(`${this._url}/absent`);
+        await page.waitForSelector(".cn-logo");
+
+        const absentAmounts = await page.$$eval(
+            ".content > .absent-legend-table > .flex-table > .flex-row",
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");
+                };
+
+                return elements.map((element) =>
+                    Number(normalize(element.textContent!).split(":")[1])
+                );
+            }
+        );
+
+        const internalAbsents: InternalAbsenceDate[] = await page.$$eval(
+            ".content > .absent-table",
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");
+                };
+
+                return elements.map((el) => {
+                    const children = el.children;
+
+                    const date = normalize(children[0].textContent!);
+
+                    const details: InternalAbsenceDetails[] = [];
+
+                    for (let i = 2; i < children.length; i++) {
+                        const absentElement = children[i];
+                        const absentElementChildren = absentElement.children;
+
+                        const period = normalize(absentElementChildren[0].textContent!);
+                        const subject = normalize(absentElementChildren[1].textContent!);
+
+                        const statusElementClasses = absentElementChildren[2].children[0].classList;
+                        const status = (() => {
+                            if (statusElementClasses.contains("black")) return 2;
+                            else if (statusElementClasses.contains("green")) return 0;
+                            else if (statusElementClasses.contains("red")) return 1;
+                            else return 3;
+                        })();
+
+                        const reason = normalize(absentElementChildren[3].textContent!);
+
+                        details.push({
+                            period: period,
+                            subject: subject,
+                            status: status,
+                            reason: reason,
+                        });
+                    }
+
+                    return {
+                        date: date,
+                        details: details,
+                    };
+                });
+            }
+        );
+
+        return {
+            totalJustified: absentAmounts[0],
+            totalUnjustified: absentAmounts[1],
+            totalWaiting: absentAmounts[2],
+            total: absentAmounts[3],
+            totalOther: absentAmounts[4],
+            dates: internalAbsents,
+        };
+    }
+
+    private async fetchGradeSchedule(page: puppeteer.Page) {
+        await page.goto(`${this._url}/schedule`);
+        await page.waitForSelector(".cn-logo");
+
+        const internalSchedules: InternalSchedule[] = await page.$$eval(
+            ".content > .schedule-table",
+            (elements) => {
+                const normalize = (str: string) => {
+                    return str.trim().replace(/\t/g, "");
+                };
+
+                return elements.map((el) => {
+                    const children = el.children;
+
+                    const periodElements = children[0].children[1].children;
+                    const periods: string[] = [];
+
+                    for (let i = 0; i < periodElements.length; i++) {
+                        periods.push(normalize(periodElements[i].textContent!));
+                    }
+
+                    const days: string[][] = [];
+
+                    for (let y = 1; y < children.length; y++) {
+                        const dayChildren = children[y].children;
+                        const subjects: string[] = [];
+
+                        for (let z = 1; z < dayChildren.length; z++) {
+                            const subject = normalize(dayChildren[z].children[1].textContent!);
+                            subjects.push(subject);
+                        }
+
+                        days.push(subjects);
+                    }
+
+                    return {
+                        periods: periods,
+                        days: days,
+                    };
+                });
+            }
+        );
+
+        return internalSchedules;
     }
 
     public async start(username: string, password: string) {}
