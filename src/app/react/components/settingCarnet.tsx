@@ -1,12 +1,12 @@
-import { CircularProgress, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import React, { useState } from "react";
-
 import { CheckRounded } from "@mui/icons-material";
-import { LoadingPhase } from "../../ipc";
-import { SettingContainer } from ".";
-import { useAppContext } from "../hooks";
+import { CircularProgress, ToggleButton } from "@mui/material";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { SettingContainer } from ".";
+import { LoadingPhase } from "../../ipc";
+import { useAppContext } from "../hooks";
+
 
 export function SettingCarnet() {
     const {

@@ -1,9 +1,9 @@
-import { BootFlags } from "../../ipc";
 import { Box } from "@mui/material";
 import React from "react";
-import { SideBarRouter } from ".";
-import { useAppContext } from "../hooks";
 import { useRecoilValue } from "recoil";
+import { SideBarRouter } from ".";
+import { BootFlags } from "../../ipc";
+import { useAppContext } from "../hooks";
 
 export function SideBar() {
     const {

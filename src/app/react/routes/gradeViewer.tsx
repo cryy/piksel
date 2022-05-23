@@ -1,10 +1,10 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-
-import { GradeList } from "../components";
 import { Grid } from "@mui/material";
 import React from "react";
-import { useAppContext } from "../hooks";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { GradeViewerPaper } from "../components";
+import { useAppContext } from "../hooks";
+
 
 export function GradeViewer() {
     const {
@@ -29,7 +29,7 @@ export function GradeViewer() {
                 setId("");
                 return;
             }
-            
+
             setBreadcrumbs((breadcrumbs) => [
                 ...breadcrumbs,
                 {
@@ -42,10 +42,10 @@ export function GradeViewer() {
     }, [location, id, ednevnikDetails]);
 
     return (
-        <Grid container spacing={0} marginBottom="24px">
+        <Grid container spacing={0} marginBottom="64px">
             <Grid item xs={1} />
-            <Grid item xs={10}>
-                Hello {grade?.name}!
+            <Grid item xs={10} display="flex" justifyContent="center" alignItems="center">
+                <GradeViewerPaper grade={grade!} />
             </Grid>
             <Grid item xs={1} />
         </Grid>

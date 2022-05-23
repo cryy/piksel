@@ -1,10 +1,10 @@
-import { Command, Config, LanguageType, Ready, ThemeMode } from "../../ipc";
-import { IPCService, RecoilService } from ".";
-import { get, has, set } from "object-path";
-
-import { RecoilState } from "recoil";
 import { cloneDeep } from "lodash";
+import { get, has, set } from "object-path";
+import { RecoilState } from "recoil";
 import { promiseSetRecoil } from "recoil-outside";
+import { IPCService, RecoilService } from ".";
+import { Command, Config, ConfigUpdate, LanguageType, Ready, ThemeMode } from "../../ipc";
+
 
 export class ConfigService {
     private _ipc: IPCService;
@@ -91,7 +91,7 @@ export class ConfigService {
     }
 
     public async set(path: string, value: any) {
-        const r = await this._ipc.send<boolean>({
+        const r = await this._ipc.send<ConfigUpdate, boolean>({
             name: "UPDATE",
             channel: this._communicationChannel,
             data: {

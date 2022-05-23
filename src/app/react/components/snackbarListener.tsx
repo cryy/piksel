@@ -1,30 +1,28 @@
-import { Command, SnackbarData } from '../../ipc';
-import React, { useEffect } from 'react'
+import { useSnackbar } from "notistack";
+import React, { useEffect } from "react";
+import { Command, SnackbarData } from "../../ipc";
+import { useAppContext } from "../hooks";
 
-import { useAppContext } from '../hooks';
-import { useSnackbar } from 'notistack'
 
 export function SnackbarListener() {
-
-    const { services: { ipc }} = useAppContext();
+    const {
+        services: { ipc },
+        lang,
+    } = useAppContext();
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        
         const remover = ipc.receive((command: Command) => {
-            if(command.name === "SNACKBAR") {
+            if (command.name === "SNACKBAR") {
                 const data = command.data as SnackbarData;
-                enqueueSnackbar(data.message, data.options);
+                enqueueSnackbar(data.useLang ? lang[data.message] : data.message, data.options);
             }
         });
 
         return () => {
             remover.remove();
-        }
-    }, []);
-    
-    
-  return (
-    <></>
-  )
+        };
+    }, [lang]);
+
+    return <></>;
 }

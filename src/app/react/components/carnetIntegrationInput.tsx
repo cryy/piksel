@@ -1,10 +1,10 @@
 import { Box, Button, CircularProgress, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import { LoadingPhase } from "../../ipc";
-import { useAppContext } from "../hooks";
 import { useRecoilState } from "recoil";
+import { CarnetLoginDetails, LoadingPhase } from "../../ipc";
+import { useAppContext } from "../hooks";
+
 
 export function CarnetIntegrationInput() {
     const {
@@ -19,12 +19,12 @@ export function CarnetIntegrationInput() {
     const [password, setPassword] = useRecoilState(recoil.carnetPassword);
     const [loading, setLoading] = useRecoilState(recoil.carnetLoadingPhase);
 
-    const buttonDisabled = !(email && password) || loading !== LoadingPhase.Loaded;
+    const buttonDisabled = !(email && password) || (loading !== LoadingPhase.Loaded && loading !== LoadingPhase.LoadedWithError);
 
     const handleClick = (e: any) => {
         if (buttonDisabled) return;
         setLoading(LoadingPhase.LoggingIn);
-        ipc.send<boolean>({
+        ipc.send<CarnetLoginDetails>({
             name: "CARNET_LOGIN",
             data: {
                 username: email,
@@ -48,7 +48,7 @@ export function CarnetIntegrationInput() {
     return (
         <Paper
             sx={{
-                maxWidth: "clamp(686px, 70vh, 986px)",
+                maxWidth: "clamp(786px, 70vw, 986px)",
             }}
         >
             <Grid container spacing={0}>

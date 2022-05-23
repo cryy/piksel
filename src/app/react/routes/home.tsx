@@ -1,9 +1,9 @@
 import { Box, Grid } from "@mui/material";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import { Greeting } from "../components";
 import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Greeting } from "../components";
 import { useAppContext } from "../hooks";
+
 
 export function Home() {
     const {

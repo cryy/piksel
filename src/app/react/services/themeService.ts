@@ -1,4 +1,4 @@
-import { Theme, createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes, Theme } from "@mui/material/styles";
 
 export class ThemeService {
     private _default: Theme;
@@ -228,13 +228,7 @@ export class ThemeService {
                     MuiPaper: {
                         defaultProps: {
                             elevation: 0,
-                        },
-                        styleOverrides: {
-                            root: {
-                                backgroundColor: "unset",
-                                background: paperColor,
-                            },
-                        },
+                        }
                     },
                 },
                 shape: {

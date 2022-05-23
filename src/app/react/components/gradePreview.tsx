@@ -1,7 +1,8 @@
 import { Divider, Grid, Paper, Typography } from "@mui/material";
-
-import { Grade } from "../../ipc";
 import React from "react";
+import { Grade } from "../../ipc";
+import { useAppContext } from "../hooks";
+
 
 export interface GradePreviewProps {
     grade: Grade;
@@ -9,11 +10,16 @@ export interface GradePreviewProps {
 }
 
 export function GradePreview({ grade, onClick }: GradePreviewProps) {
+
+    const { lang, theme } = useAppContext();
+    const successColor = theme.palette.mode === "dark" ? theme.palette.success.main : theme.palette.success.dark;
+    const passingGradeColor = grade.passingGrade === "-" ? undefined : successColor;
+
     return (
         <Paper
             sx={{
                 width: "256px",
-                height: "196px",
+                height: "230px",
                 cursor: "pointer",
             }}
             onClick={onClick}
@@ -27,8 +33,16 @@ export function GradePreview({ grade, onClick }: GradePreviewProps) {
                 }}
             >
                 <Grid item xs={1} />
-                <Grid item xs={10} display="flex" justifyContent="center" alignItems="center">
+                <Grid
+                    item
+                    xs={10}
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    flexDirection="column"
+                >
                     <Typography variant="h5">{grade.name}</Typography>
+                    <Typography variant="body1">{grade.date}</Typography>
                 </Grid>
                 <Grid item xs={1} />
                 <Grid item xs={1} />
@@ -48,7 +62,7 @@ export function GradePreview({ grade, onClick }: GradePreviewProps) {
                     <Grid container spacing={0}>
                         <Grid
                             item
-                            xs={6}
+                            xs={8}
                             display="flex"
                             justifyContent="flex-start"
                             alignItems="center"
@@ -59,21 +73,19 @@ export function GradePreview({ grade, onClick }: GradePreviewProps) {
                                     fontWeight: 600,
                                 }}
                             >
-                                Završni prosjek
+                                {lang.finalAverage}
                             </Typography>
                         </Grid>
                         <Grid
                             item
-                            xs={6}
+                            xs={4}
                             display="flex"
                             justifyContent="flex-end"
                             alignItems="center"
                         >
                             <Typography
                                 variant="body1"
-                                color={
-                                    grade.passingGrade === "-" ? undefined : "success.dark"
-                                }
+                                color={passingGradeColor}
                             >
                                 {grade.passingGrade}
                             </Typography>

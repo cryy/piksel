@@ -1,5 +1,4 @@
 import { ConfigService } from ".";
-import { app } from "electron";
 
 export interface Lang {
     minimizeToTray: string;

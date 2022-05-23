@@ -1,9 +1,8 @@
-import React, { useState } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-
+import React, { useState } from "react";
 import { SettingContainer } from ".";
-import { ThemeMode } from "../../ipc";
 import { useAppContext } from "../hooks";
+
 
 export function SettingTheme() {
     const {

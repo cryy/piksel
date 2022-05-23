@@ -1,9 +1,9 @@
-import { Command, Config, ConfigUpdate } from "../../ipc";
-import Store, { Schema } from "electron-store";
 import { app, nativeTheme } from "electron";
-
+import Store, { Schema } from "electron-store";
 import { BrowserWindow } from "glasstron";
 import { IPCService } from ".";
+import { Command, Config, ConfigUpdate } from "../../ipc";
+
 
 export class ConfigService {
     private _ipc: IPCService;

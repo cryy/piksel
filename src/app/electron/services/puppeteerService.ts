@@ -1,18 +1,20 @@
-import { BrowserWindow, app } from "electron";
+import { app, BrowserWindow } from "electron";
+import puppeteer from "puppeteer-core";
+import pie from "puppeteer-in-electron";
+import { IPCService } from ".";
 import {
     CarnetLoginDetails,
+    CarnetUpdateState,
     Command,
     EDnevnikDetails,
     Grade,
     GradingElement,
     GradingNote,
     LoadingPhase,
-    Subject,
+    SnackbarData,
+    Subject
 } from "../../ipc";
 
-import { IPCService } from ".";
-import pie from "puppeteer-in-electron";
-import puppeteer from "puppeteer-core";
 
 export interface InternalSubject {
     href: string;
@@ -73,17 +75,30 @@ export class PuppeteerService {
             case "CARNET_LOGIN":
                 d = command.data as CarnetLoginDetails;
                 this.createWindow();
-                const result = await this.login(d.username, d.password);
+                const result = await this.login(d.username, d.password, true);
                 if (!result) {
-                    this._ipc.send({
+                    this._ipc.send<CarnetUpdateState>({
                         name: "CARNET_LOADING_STATE",
                         data: {
-                            state: LoadingPhase.Loaded,
+                            state: LoadingPhase.LoadedWithError,
                         },
                     });
+                    this._ipc.send<SnackbarData>({
+                        name: "SNACKBAR",
+                        data: {
+                            message: "wrongDetails",
+                            useLang: true,
+                            options: {
+                                variant: "error"
+                            }
+                        }
+                    });
+                    this.destroyWindow();
                     return false;
                 }
-                this.fetchInformation(result);
+                this.fetchInformation(result).then(() => {
+                    this.destroyWindow();
+                });
                 return true;
             default:
                 break;
@@ -106,7 +121,7 @@ export class PuppeteerService {
         this._window = null;
     }
 
-    private async login(username: string, password: string) {
+    private async login(username: string, password: string, calledFromReact: boolean) {
         if (!(this._window && this._browser)) return false;
         if (!(username && password)) return false;
 
@@ -116,8 +131,8 @@ export class PuppeteerService {
 
             await page.waitForSelector(".cn-logo");
 
-            await page.type("input[name=username]", username, { delay: 15 });
-            await page.type("input[name=password]", password, { delay: 15 });
+            await page.type("input[name=username]", username, { delay: 5 });
+            await page.type("input[name=password]", password, { delay: 5 });
 
             await Promise.all([page.click("input[type=submit]"), page.waitForNavigation()]);
 
@@ -130,7 +145,7 @@ export class PuppeteerService {
     }
 
     private async fetchInformation(page: puppeteer.Page) {
-        this._ipc.send({
+        this._ipc.send<CarnetUpdateState>({
             name: "CARNET_LOADING_STATE",
             data: {
                 state: LoadingPhase.Loading,
@@ -186,14 +201,14 @@ export class PuppeteerService {
             });
         }
 
-        this._ipc.send({
+        this._ipc.send<EDnevnikDetails>({
             name: "EDNEVNIK_UPDATE",
             data: {
                 studentName: gradesResult[0],
                 grades: externalGrades,
             },
         });
-        this._ipc.send({
+        this._ipc.send<CarnetUpdateState>({
             name: "CARNET_LOADING_STATE",
             data: {
                 state: LoadingPhase.Loaded,

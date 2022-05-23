@@ -1,3 +1,3 @@
 export * from './entities';
-export * from './types';
 export * from "./messages";
+export * from './types';

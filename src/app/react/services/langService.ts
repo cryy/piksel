@@ -20,6 +20,8 @@ export interface Lang {
     carnetPassword: string;
     loginAction: string;
     loggingIn: string;
+    finalAverage: string;
+    wrongDetails: string;
 }
 
 export class LangService {
@@ -53,7 +55,9 @@ export class LangService {
             carnetEmail: "CARNet e-pošta",
             carnetPassword: "CARNet lozinka",
             loginAction: "Prijavi se",
-            loggingIn: "Prijavljivanje"
+            loggingIn: "Prijavljivanje",
+            finalAverage: "Završni prosjek",
+            wrongDetails: "Pogrešna e-pošta ili lozinka"
         };
     }
 
@@ -79,7 +83,9 @@ export class LangService {
             carnetEmail: "CARNet e-mail",
             carnetPassword: "CARNet password",
             loginAction: "Login",
-            loggingIn: "Logging in"
+            loggingIn: "Logging in",
+            finalAverage: "Final average",
+            wrongDetails: "Wrong e-mail or password"
         };
     }
 

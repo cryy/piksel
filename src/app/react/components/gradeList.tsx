@@ -1,11 +1,10 @@
-import { SettingBlur, SettingCarnet, SettingLang, SettingTheme } from ".";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import { GradePreview } from "./gradePreview";
 import { Grid } from "@mui/material";
 import React from "react";
-import { useAppContext } from "../hooks";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useAppContext } from "../hooks";
+import { GradePreview } from "./gradePreview";
+
 
 export interface GradeItemProps {
     children: React.ReactNode;

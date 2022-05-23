@@ -1,8 +1,8 @@
-import { BootFlags, Config, EDnevnikDetails, LoadingPhase } from "../../ipc";
-import { RecoilState, atom } from "recoil";
-
 import { Location } from "react-router-dom";
+import { atom, RecoilState } from "recoil";
 import { Nullable } from "../../../types/nulllable";
+import { BootFlags, Config, EDnevnikDetails, LoadingPhase } from "../../ipc";
+
 
 export interface Breadcrumb {
     name: string;

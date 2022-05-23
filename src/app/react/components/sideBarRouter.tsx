@@ -1,13 +1,10 @@
-import { Box, IconButton, IconButtonProps, Link, Palette, Typography, styled } from "@mui/material";
-import { Link as RouteLink, useLocation } from "react-router-dom";
-
-import { Typography as CreateTypography } from "@mui/material/styles/createTypography";
-import React from "react";
-import { RouteFlags } from "../services";
+import { Box, IconButton, Palette, styled, Typography } from "@mui/material";
 import { keyframes } from "@mui/system";
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../hooks";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { RouteFlags } from "../services";
+
 
 const iconUnactiveStyles = (palette: Palette) => ({
     width: "1.1em",

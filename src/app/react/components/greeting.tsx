@@ -1,14 +1,14 @@
-import { Box, Grid, Typography } from "@mui/material";
-
+import { Grid, Typography } from "@mui/material";
+import React, { useState } from "react";
 import Afternoon from "../assets/images/afternoon.svg";
 import Morning from "../assets/images/morning.svg";
 import Night from "../assets/images/night.svg";
-import React from "react";
 import { useAppContext } from "../hooks";
 
+
 export function Greeting() {
-    const { lang, hour } = useAppContext();
-    const hours = hour;
+    const { lang } = useAppContext();
+    const [hours] = useState(new Date().getHours());
     const resources = (() => {
         if (hours >= 6 && hours <= 11)
             return {

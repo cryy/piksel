@@ -1,6 +1,6 @@
 import { Grid, Paper, Typography } from "@mui/material";
-
 import React from "react";
+
 
 export interface SettingContainerProps {
     name: string;

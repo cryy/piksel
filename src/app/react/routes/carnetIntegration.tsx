@@ -1,9 +1,9 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import { CarnetIntegrationInput } from "../components";
 import { Grid } from "@mui/material";
 import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { CarnetIntegrationInput } from "../components";
 import { useAppContext } from "../hooks";
+
 
 export function CarnetIntegration() {
     const {
@@ -29,7 +29,7 @@ export function CarnetIntegration() {
     }, [location]);
 
     return (
-        <Grid container spacing={0} marginBottom="24px">
+        <Grid container spacing={0} marginBottom="64px">
             <Grid item xs={1} />
             <Grid item xs={10} display="flex" justifyContent="center" alignItems="center">
                 <CarnetIntegrationInput />

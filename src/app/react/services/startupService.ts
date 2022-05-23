@@ -1,7 +1,7 @@
-import { CarnetUpdateState, Command, EDnevnikDetails, Ready } from "../../ipc";
-import { ConfigService, IPCService, RecoilService } from ".";
-
 import { promiseSetRecoil } from "recoil-outside";
+import { ConfigService, IPCService, RecoilService } from ".";
+import { CarnetUpdateState, Command, EDnevnikDetails, Ready } from "../../ipc";
+
 
 export class StartupService {
     private _recoil: RecoilService;

@@ -1,5 +1,5 @@
-import { ServiceContainer } from "./services";
 import { app } from "electron";
+import { ServiceContainer } from "./services";
 
 const lock = app.requestSingleInstanceLock();
 

@@ -1,6 +1,7 @@
-export * from './startupService';
-export * from './serviceContainer';
+export * from "./configService";
 export * from "./ipcService";
 export * from "./langService";
-export * from "./configService";
 export * from "./puppeteerService";
+export * from './serviceContainer';
+export * from './startupService';
+

@@ -1,9 +1,9 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
 import { Grid } from "@mui/material";
 import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { SettingList } from "../components";
 import { useAppContext } from "../hooks";
+
 
 export function Settings() {
 

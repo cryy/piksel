@@ -1,12 +1,11 @@
+import { Box } from "@mui/material";
+import { keyframes } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-
-import { AppBreadcrumbs } from "../components";
-import { Box } from "@mui/material";
-import { RouteFlags } from "../services";
-import { keyframes } from "@mui/system";
-import { useAppContext } from "../hooks";
 import { useRecoilState } from "recoil";
+import { AppBreadcrumbs } from "../components";
+import { useAppContext } from "../hooks";
+
 
 const fadeInStyling = {
     opacity: 1,

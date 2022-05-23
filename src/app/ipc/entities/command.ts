@@ -1,6 +1,6 @@
 
-export interface Command {
+export interface Command<T = any> {
     name: string;
-    data?: any;
+    data?: T;
     channel?: string;
 }

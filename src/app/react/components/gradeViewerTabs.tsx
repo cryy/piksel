@@ -1,0 +1,89 @@
+import {
+    Tab,
+    Tabs
+} from "@mui/material";
+import { Box } from "@mui/system";
+import React, { useState } from "react";
+import { Grade } from "../../ipc";
+import { GradeViewerSubjects } from "./gradeViewerSubjects";
+
+
+export interface GradeViewerTabsProps {
+    grade: Grade;
+}
+
+function TabPanel(props: any) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <Box
+            role="tabpanel"
+            hidden={value !== index}
+            id={`vertical-tabpanel-${index}`}
+            sx={{
+                overflow: "auto",
+                width: "100%",
+            }}
+            {...other}
+        >
+            {value === index && (
+                <Box
+                    sx={{
+                        margin: "32px 0",
+                    }}
+                >
+                    {children}
+                </Box>
+            )}
+        </Box>
+    );
+}
+
+export function GradeViewerTabs({ grade }: GradeViewerTabsProps) {
+    const [value, setValue] = useState(0);
+
+    const handleChange = (e: any, newValue: number) => {
+        setValue(newValue);
+    };
+
+    return (
+        <>
+            <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={value}
+                onChange={handleChange}
+                sx={{
+                    borderRight: 1,
+                    borderColor: "divider",
+                    height: "100%",
+                    "& > .MuiTabs-scroller > .MuiTabs-flexContainer": {
+                        height: "100%",
+                        justifyContent: "center",
+                    },
+                }}
+            >
+                <Tab label="Ocjene" id="vertical-tab-0" />
+                <Tab label="Bilješke" id="vertical-tab-1" />
+                <Tab label="Ispiti" id="vertical-tab-2" />
+                <Tab label="Izostanci" id="vertical-tab-3" />
+                <Tab label="Raspored" id="vertical-tab-4" />
+            </Tabs>
+            <TabPanel value={value} index={0}>
+                <GradeViewerSubjects grade={grade} />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                Item Two
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                Item Three
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                Item Four
+            </TabPanel>
+            <TabPanel value={value} index={4}>
+                Item Five
+            </TabPanel>
+        </>
+    );
+}

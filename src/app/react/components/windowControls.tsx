@@ -1,8 +1,8 @@
-import { Box, Grid, IconButton, styled } from "@mui/material";
 import { CloseRounded, CropSquareRounded, MinimizeRounded } from "@mui/icons-material";
-
+import { Box, Grid, IconButton, styled } from "@mui/material";
 import React from "react";
 import { useAppContext } from "../hooks";
+
 
 export const ControlButton = styled(IconButton)({
     width: "100%",

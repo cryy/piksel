@@ -1,11 +1,11 @@
+import { ipcRenderer } from "electron-better-ipc";
 import {
     Callback,
     Command,
     CommandReceiver,
-    RenderReceiverCallback,
+    RenderReceiverCallback
 } from "../../ipc";
 
-import { ipcRenderer } from "electron-better-ipc";
 
 export class IPCService {
     private readonly _channel = "COMMAND";
@@ -20,8 +20,8 @@ export class IPCService {
         });
     }
 
-    public send<T = any>(command: Command): Promise<T> {
-        return ipcRenderer.callMain<Command, T>(
+    public send<T = any, T2 = undefined>(command: Command<T>): Promise<T2> {
+        return ipcRenderer.callMain<Command, T2>(
             command.channel ?? this._channel,
             command
         );

@@ -1,8 +1,8 @@
-import { Lang, ServiceContainer } from "../services";
-import { LanguageType, ThemeMode } from "../../ipc";
-
-import React from "react";
 import { Theme } from "@mui/material";
+import React from "react";
+import { LanguageType, ThemeMode } from "../../ipc";
+import { Lang, ServiceContainer } from "../services";
+
 
 export interface AppContext {
     services: ServiceContainer;

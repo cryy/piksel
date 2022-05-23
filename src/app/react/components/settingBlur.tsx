@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-
 import { CheckRounded } from "@mui/icons-material";
-import { SettingContainer } from ".";
 import { ToggleButton } from "@mui/material";
+import React, { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { SettingContainer } from ".";
 import { useAppContext } from "../hooks";
+
 
 export function SettingBlur() {
     const {

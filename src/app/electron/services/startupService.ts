@@ -1,20 +1,16 @@
-import { BootFlags, Command } from "../../ipc";
 import {
-    BrowserWindowConstructorOptions,
+    app, BrowserWindowConstructorOptions,
     Menu,
-    Notification,
-    Tray,
-    app,
-    screen,
-    shell,
+    Notification, screen,
+    shell, Tray
 } from "electron";
-import { ConfigService, IPCService, LangService } from ".";
-
 import { BrowserWindow } from "glasstron";
 import os from "os";
 import path from "path";
-import { plugin } from "electron-frameless-window-plugin";
 import url from "url";
+import { ConfigService, IPCService, LangService } from ".";
+import { BootFlags, Command } from "../../ipc";
+
 
 export class StartupService {
     private _ipc: IPCService;
