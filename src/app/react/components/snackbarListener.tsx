@@ -1,4 +1,4 @@
-import { useSnackbar } from "notistack";
+import { useSnackbar } from "../../notistack";
 import React, { useEffect } from "react";
 import { Command, SnackbarData } from "../../ipc";
 import { useAppContext } from "../hooks";

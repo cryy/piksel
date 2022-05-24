@@ -1,6 +1,6 @@
 {
     "name": "piksel",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "A daily-driver app for students.",
     "main": "./dist/main.js",
     "scripts": {
@@ -9,9 +9,10 @@
         "dev:react": "npx --no-install cross-env NODE_ENV=development && npx --no-install webpack-cli --config ./webpack/react.config.js --mode development --progress --color",
         "dev:electron": "npx --no-install cross-env NODE_ENV=development && npx --no-install webpack-cli --config ./webpack/electron.config.js --mode development --progress --color",
         "rebuild": "electron-rebuild",
-        "prod": "npx --no-install rimraf dist && concurrently \"npm run prod:electron\" \"npm run prod:react\"",
+        "prod": "npx --no-install concurrently \"npm run prod:electron\" \"npm run prod:react\"",
         "prod:react": "npx --no-install cross-env NODE_ENV=production && npx --no-install webpack-cli --config ./webpack/react.config.js --mode production --progress --color",
-        "prod:electron": "npx --no-install cross-env NODE_ENV=production && npx --no-install webpack-cli --config ./webpack/electron.config.js --mode production --progress --color "
+        "prod:electron": "npx --no-install cross-env NODE_ENV=production && npx --no-install webpack-cli --config ./webpack/electron.config.js --mode production --progress --color",
+        "build": "npm run prod"
     },
     "repository": {
         "type": "git",
@@ -35,7 +36,6 @@
         "glasstron": "^0.1.1",
         "lodash": "^4.17.21",
         "moment": "^2.29.3",
-        "notistack": "github:cryy/notistack",
         "object-path": "^0.11.8",
         "puppeteer-core": "^14.1.0",
         "puppeteer-in-electron": "^3.0.5",

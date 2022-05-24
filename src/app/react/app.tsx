@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 import { CssBaseline } from "@mui/material";
 import { ServiceContainer } from "./services";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider } from "../notistack";
 import { ThemeProvider } from "@mui/material/styles";
 
 export interface AppProps {
