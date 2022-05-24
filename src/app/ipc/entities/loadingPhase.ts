@@ -2,5 +2,6 @@ export enum LoadingPhase {
     Loading,
     Loaded,
     LoadedWithError,
-    LoggingIn
+    LoggingIn,
+    Refreshing
 }

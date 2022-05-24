@@ -21,12 +21,14 @@ export function SettingCarnet() {
         lang,
         services: {
             config,
+            ipc,
             recoil: { carnetLoadingPhase, carnetUsername, carnetPassword },
         },
     } = useAppContext();
 
     const navigate = useNavigate();
 
+    const [ignore, setIgnore] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const loadingPhase = useRecoilValue(carnetLoadingPhase);
@@ -48,7 +50,14 @@ export function SettingCarnet() {
         setDialogOpen(false);
     };
 
-    const handleDisable = (e: any) => {
+    const handleDisable = async (e: any) => {
+        if (ignore) return;
+        setIgnore(true);
+        await ipc.send({
+            name: "CARNET_LOGOUT",
+            channel: "PUPPETEER",
+        });
+        setIgnore(false);
         setDialogOpen(false);
     };
 
@@ -69,8 +78,10 @@ export function SettingCarnet() {
                     <DialogContentText>{lang.signOutOfCarnetExplanation}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>{lang.cancel}</Button>
-                    <Button onClick={handleDisable} autoFocus>
+                    <Button onClick={handleClose} disabled={ignore}>
+                        {lang.cancel}
+                    </Button>
+                    <Button onClick={handleDisable} autoFocus disabled={ignore}>
                         {lang.disable}
                     </Button>
                 </DialogActions>

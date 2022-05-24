@@ -58,6 +58,9 @@ export interface Lang {
     signOutOfCarnetExplanation: string;
     cancel: string;
     disable: string;
+    requiresCarnetIntegration: string;
+    nextRefresh: string;
+    refreshing: string;
 }
 
 export class LangService {
@@ -129,7 +132,10 @@ export class LangService {
             signOutOfCarnet: "Isključiti CARNet integraciju?",
             signOutOfCarnetExplanation: "Isključivanje CARNet integracije će vas odjaviti iz CARNet sistema i nećete moći pristupiti eDnevnik usluzi u piksel aplikaciji.",
             cancel: "Odustani",
-            disable: "Isključi"
+            disable: "Isključi",
+            requiresCarnetIntegration: "Kako bi ste koristili ovu uslugu, potrebno je uključiti CARNet integraciju u postavkama.",
+            nextRefresh: "Osvježavanje podataka",
+            refreshing: "Osvježavanje..."
         };
     }
 
@@ -193,7 +199,10 @@ export class LangService {
             signOutOfCarnet: "Disable CARNet integration?",
             signOutOfCarnetExplanation: "Turning off CARNet integration will sign you out of the CARNet system. You won't be able to access eDnevnik in the piksel app.",
             cancel: "Cancel",
-            disable: "Disable"
+            disable: "Disable",
+            requiresCarnetIntegration: "To use this service, you have to enable CARNet integration in the settings.",
+            nextRefresh: "Refreshing data",
+            refreshing: "Refreshing..."
         };
     }
 

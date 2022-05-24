@@ -11,13 +11,14 @@ import { BrowserWindow } from "glasstron";
 import os from "os";
 import path from "path";
 import url from "url";
-import { ConfigService, IPCService, LangService } from ".";
-import { BootFlags, Command } from "../../ipc";
+import { ConfigService, IPCService, LangService, PuppeteerService } from ".";
+import { BootFlags, Command, Ready } from "../../ipc";
 
 export class StartupService {
     private _ipc: IPCService;
     private _lang: LangService;
     private _config: ConfigService;
+    private _puppeteer: PuppeteerService;
 
     private _window: BrowserWindow | null;
     private _tray: Tray | null;
@@ -30,10 +31,11 @@ export class StartupService {
 
     private _macNameMap: Map<number, string[]>;
 
-    constructor(ipc: IPCService, lang: LangService, config: ConfigService) {
+    constructor(ipc: IPCService, lang: LangService, config: ConfigService, puppeteer: PuppeteerService) {
         this._ipc = ipc;
         this._lang = lang;
         this._config = config;
+        this._puppeteer = puppeteer;
 
         this._window = null;
         this._tray = null;
@@ -272,13 +274,14 @@ export class StartupService {
     }
 
     private async ready() {
-        await this._ipc.send({
+        await this._ipc.send<Ready>({
             name: "READY",
             data: {
                 config: this._config.store,
                 bootFlags: this._bootFlags,
             },
         });
+        this._puppeteer.start();
         this._ready = true;
     }
 

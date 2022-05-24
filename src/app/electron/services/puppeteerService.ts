@@ -1,7 +1,9 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, session } from "electron";
+import moment from "moment";
 import puppeteer from "puppeteer-core";
 import pie from "puppeteer-in-electron";
-import { IPCService } from ".";
+import { ConfigService, IPCService, StorageService } from ".";
+import { Nullable } from "../../../types/nulllable";
 import {
     Absences,
     AbsentStatus,
@@ -94,18 +96,26 @@ export interface InternalSchedule {
 
 export class PuppeteerService {
     private _ipc: IPCService;
+    private _config: ConfigService;
+    private _storage: StorageService;
 
     private _browser: puppeteer.Browser | null;
     private _window: BrowserWindow | null;
 
+    private _timeout: NodeJS.Timeout | null;
+
     private readonly _url: string;
     private readonly _communicationChannel: string;
 
-    constructor(ipc: IPCService) {
+    constructor(ipc: IPCService, config: ConfigService, storage: StorageService) {
         this._ipc = ipc;
+        this._config = config;
+        this._storage = storage;
 
         this._browser = null;
         this._window = null;
+
+        this._timeout = null;
 
         this._url = "https://ocjene.skole.hr";
         this._communicationChannel = "PUPPETEER";
@@ -119,31 +129,31 @@ export class PuppeteerService {
         switch (command.name) {
             case "CARNET_LOGIN":
                 d = command.data as CarnetLoginDetails;
-                this.createWindow();
-                const result = await this.login(d.username, d.password, true);
-                if (!result) {
-                    this._ipc.send<CarnetUpdateState>({
-                        name: "CARNET_LOADING_STATE",
-                        data: {
-                            state: LoadingPhase.LoadedWithError,
-                        },
-                    });
-                    this._ipc.send<SnackbarData>({
-                        name: "SNACKBAR",
-                        data: {
-                            message: "wrongDetails",
-                            useLang: true,
-                            options: {
-                                variant: "error",
-                            },
-                        },
-                    });
-                    this.destroyWindow();
-                    return false;
-                }
-                this.fetchInformation(result).then(() => {
-                    this.destroyWindow();
+                const result = await this.scrape(d.username, d.password, true);
+                this._config.update("carnetUsername", d.username);
+                this._config.update("carnetPassword", d.password);
+
+                return result;
+            case "CARNET_LOGOUT":
+                this._storage.deleteEDnevnik();
+                this._config.update("carnetUsername", "");
+                this._config.update("carnetPassword", "");
+                this._ipc.send<Nullable<EDnevnikDetails>>({
+                    name: "EDNEVNIK_UPDATE",
+                    data: null,
                 });
+
+                return true;
+            case "REFRESH":
+                if (this._timeout) {
+                    clearTimeout(this._timeout);
+                    this._timeout = null;
+                }
+                this.createTimeout(
+                    this._config.store.carnetUsername,
+                    this._config.store.carnetPassword,
+                    0
+                );
                 return true;
             default:
                 break;
@@ -161,7 +171,10 @@ export class PuppeteerService {
         }
     }
 
-    private destroyWindow() {
+    private async destroyWindow() {
+        await session.defaultSession.clearStorageData({
+            origin: "https://ocjene.skole.hr",
+        });
         this._window?.destroy();
         this._window = null;
     }
@@ -171,13 +184,21 @@ export class PuppeteerService {
         if (!(username && password)) return false;
 
         try {
+            if (!calledFromReact) {
+                this._ipc.send<CarnetUpdateState>({
+                    name: "CARNET_LOADING_STATE",
+                    data: {
+                        state: LoadingPhase.Refreshing,
+                    },
+                });
+            }
             await this._window.loadURL(`${this._url}/login`);
             const page = await pie.getPage(this._browser, this._window);
 
             await page.waitForSelector(".cn-logo");
 
-            await page.type("input[name=username]", username, { delay: 5 });
-            await page.type("input[name=password]", password, { delay: 5 });
+            await page.type("input[name=username]", username, { delay: 10 });
+            await page.type("input[name=password]", password, { delay: 10 });
 
             await Promise.all([page.click("input[type=submit]"), page.waitForNavigation()]);
 
@@ -189,13 +210,15 @@ export class PuppeteerService {
         }
     }
 
-    private async fetchInformation(page: puppeteer.Page) {
-        this._ipc.send<CarnetUpdateState>({
-            name: "CARNET_LOADING_STATE",
-            data: {
-                state: LoadingPhase.Loading,
-            },
-        });
+    private async fetchInformation(page: puppeteer.Page, calledFromReact: boolean) {
+        if (calledFromReact) {
+            this._ipc.send<CarnetUpdateState>({
+                name: "CARNET_LOADING_STATE",
+                data: {
+                    state: LoadingPhase.Loading,
+                },
+            });
+        }
         const gradesResult = await this.fetchGrades(page);
         const grades = gradesResult[1];
 
@@ -262,7 +285,8 @@ export class PuppeteerService {
             const averageBasedOnAverages =
                 numberGradesBasedOnAverages.reduce((a, b) => a + b, 0) /
                 numberGradesBasedOnAverages.length;
-            const roundedAverageBasedOnAverages = Math.round((averageBasedOnAverages + Number.EPSILON) * 100) / 100;
+            const roundedAverageBasedOnAverages =
+                Math.round((averageBasedOnAverages + Number.EPSILON) * 100) / 100;
 
             externalGrades.push({
                 name: grade.name,
@@ -284,12 +308,19 @@ export class PuppeteerService {
             });
         }
 
+        const now = Date.now();
+        const refreshAt = moment(now).add(45, "m").toDate().getTime();
+
+        const details: EDnevnikDetails = {
+            studentName: gradesResult[0],
+            grades: externalGrades,
+            at: now,
+            refresh: refreshAt,
+        };
+
         this._ipc.send<EDnevnikDetails>({
             name: "EDNEVNIK_UPDATE",
-            data: {
-                studentName: gradesResult[0],
-                grades: externalGrades,
-            },
+            data: details,
         });
         this._ipc.send<CarnetUpdateState>({
             name: "CARNET_LOADING_STATE",
@@ -297,6 +328,10 @@ export class PuppeteerService {
                 state: LoadingPhase.Loaded,
             },
         });
+
+        this._storage.storeEDnevnik(details);
+
+        return details;
     }
 
     private async fetchGrades(page: puppeteer.Page): Promise<[string, InternalGrade[]]> {
@@ -653,5 +688,71 @@ export class PuppeteerService {
         return internalSchedules;
     }
 
-    public async start(username: string, password: string) {}
+    private async scrape(username: string, password: string, calledFromReact: boolean) {
+        this.createWindow();
+        const result = await this.login(username, password, calledFromReact);
+        if (!result) {
+            this._ipc.send<CarnetUpdateState>({
+                name: "CARNET_LOADING_STATE",
+                data: {
+                    state: LoadingPhase.LoadedWithError,
+                },
+            });
+            this._ipc.send<SnackbarData>({
+                name: "SNACKBAR",
+                data: {
+                    message: "wrongDetails",
+                    useLang: true,
+                    options: {
+                        variant: "error",
+                    },
+                },
+            });
+            this.destroyWindow();
+            return false;
+        }
+        this.fetchInformation(result, calledFromReact)
+            .catch((_) => {})
+            .then(() => {
+                this.createTimeout(username, password);
+                this.destroyWindow();
+            });
+        return true;
+    }
+
+    private createTimeout(username: string, password: string, refreshIn?: number) {
+        //create a timeout in 45 minutes or a set due date
+        this._timeout = setTimeout(() => {
+            this._timeout = null;
+            this.scrape(username, password, false);
+        }, refreshIn ?? 2700000);
+    }
+
+    public start() {
+        if (this._timeout) return;
+
+        const { carnetUsername, carnetPassword } = this._config.store;
+
+        if (carnetUsername && carnetPassword) {
+            const ednevnik = this._storage.getEDnevnik();
+            this._ipc.send<Nullable<EDnevnikDetails>>({
+                name: "EDNEVNIK_UPDATE",
+                data: ednevnik,
+            });
+
+            const now = Date.now();
+            const difference = (ednevnik?.refresh ?? now) - now;
+
+            if (difference <= 0) {
+                this.scrape(carnetUsername, carnetPassword, false);
+            } else {
+                this.createTimeout(carnetUsername, carnetPassword, difference);
+            }
+        }
+    }
+
+    public stop() {
+        if (this._timeout) clearTimeout(this._timeout);
+        this._timeout = null;
+    }
 }

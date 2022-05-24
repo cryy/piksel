@@ -7,6 +7,9 @@ import ReactDOM from "react-dom/client";
 import RecoilOutside from "recoil-outside";
 import { RecoilRoot } from "recoil";
 import { ServiceContainer } from "./services";
+import moment from "moment";
+
+moment.relativeTimeRounding(Math.floor);
 
 const services = new ServiceContainer();
 const root = ReactDOM.createRoot(document.getElementById("root")!);

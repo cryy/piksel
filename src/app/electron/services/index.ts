@@ -4,4 +4,4 @@ export * from "./langService";
 export * from "./puppeteerService";
 export * from './serviceContainer';
 export * from './startupService';
-
+export * from "./storageService";
