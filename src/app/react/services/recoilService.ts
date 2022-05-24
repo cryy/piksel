@@ -8,6 +8,7 @@ export interface Breadcrumb {
     name: string;
     link: string;
     useLang: boolean;
+    subroute: boolean;
 }
 
 export class RecoilService {

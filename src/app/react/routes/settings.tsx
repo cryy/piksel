@@ -22,7 +22,8 @@ export function Settings() {
                 {
                     name: "settingsPage",
                     link: "/settings",
-                    useLang: true
+                    useLang: true,
+                    subroute: false
                 },
             ]);
         }

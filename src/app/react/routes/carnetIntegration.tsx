@@ -22,7 +22,8 @@ export function CarnetIntegration() {
                 {
                     name: "carnetIntegration",
                     link: "/settings/carnet",
-                    useLang: true
+                    useLang: true,
+                    subroute: true
                 },
             ]);
         }

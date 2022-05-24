@@ -20,7 +20,8 @@ export function Reminders() {
                 {
                     name: "remindersPage",
                     link: "/reminders",
-                    useLang: true
+                    useLang: true,
+                    subroute: false
                 },
             ]);
         }

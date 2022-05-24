@@ -31,11 +31,12 @@ export function GradeViewer() {
             }
 
             setBreadcrumbs((breadcrumbs) => [
-                ...breadcrumbs,
+                ...breadcrumbs.filter(x => !x.subroute),
                 {
                     name: grade.name,
                     link: `/ednevnik/gradeViewer`,
                     useLang: false,
+                    subroute: true
                 },
             ]);
         }

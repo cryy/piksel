@@ -23,6 +23,7 @@ export function EDnevnik() {
                     name: "ednevnikPage",
                     link: "/ednevnik",
                     useLang: true,
+                    subroute: false
                 },
             ]);
         }

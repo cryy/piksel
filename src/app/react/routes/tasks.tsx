@@ -19,7 +19,8 @@ export function Tasks() {
                 {
                     name: "tasksPage",
                     link: "/tasks",
-                    useLang: true
+                    useLang: true,
+                    subroute: false
                 },
             ]);
         }
