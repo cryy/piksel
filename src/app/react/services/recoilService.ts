@@ -31,6 +31,7 @@ export class RecoilService {
     private _ednevnik: RecoilState<Nullable<EDnevnikDetails>>;
     private _gradeViewerId: RecoilState<string>;
     private _tasks: RecoilState<Task[]>;
+    private _openTaskId: RecoilState<Nullable<number>>;
 
     private _taskStats: RecoilValueReadOnly<TaskStats>;
 
@@ -50,6 +51,7 @@ export class RecoilService {
         this._ednevnik = atoms["ednevnik"];
         this._gradeViewerId = atoms["gradeViewerId"];
         this._tasks = atoms["tasks"];
+        this._openTaskId = atoms["openTaskId"];
 
         const selectors = this.createSelectors();
 
@@ -115,6 +117,10 @@ export class RecoilService {
                     },
                 ],
             }),
+            openTaskId: atom({
+                key: "openTaskId",
+                default: null as Nullable<number>
+            })
         };
     }
 
@@ -183,5 +189,9 @@ export class RecoilService {
 
     public get taskStats() {
         return this._taskStats;
+    }
+
+    public get openTaskId() {
+        return this._openTaskId;
     }
 }

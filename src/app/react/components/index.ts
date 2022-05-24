@@ -31,3 +31,5 @@ export * from "./taskStats";
 export * from "./completedTasks";
 export * from "./incompletedTasks";
 export * from "./taskCreatorInput";
+export * from "./taskPreview";
+export * from "./taskViewer";

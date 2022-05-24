@@ -62,6 +62,16 @@ export interface Lang {
     nextRefresh: string;
     refreshing: string;
     createTask: string;
+    completed: string;
+    incompleted: string;
+    noTasks: string;
+    highPriority: string;
+    normalPriority: string;
+    lowPriority: string;
+    priority: string;
+    taskName: string;
+    taskDescription: string;
+    create: string;
 }
 
 export class LangService {
@@ -137,7 +147,17 @@ export class LangService {
             requiresCarnetIntegration: "Kako bi ste koristili ovu uslugu, potrebno je uključiti CARNet integraciju u postavkama.",
             nextRefresh: "Osvježavanje podataka",
             refreshing: "Osvježavanje...",
-            createTask: "Novi zadatak"
+            createTask: "Novi zadatak",
+            completed: "Završeno",
+            incompleted: "Nezavršeno",
+            noTasks: "Ovdje nema zadataka.",
+            highPriority: "Visoka",
+            normalPriority: "Normalna",
+            lowPriority: "Niska",
+            priority: "Važnost",
+            taskName: "Ime zadatka",
+            taskDescription: "Opis zadatka",
+            create: "Kreiraj"
         };
     }
 
@@ -205,7 +225,17 @@ export class LangService {
             requiresCarnetIntegration: "To use this service, you have to enable CARNet integration in the settings.",
             nextRefresh: "Refreshing data",
             refreshing: "Refreshing...",
-            createTask: "New task"
+            createTask: "New task",
+            completed: "Completed",
+            incompleted: "Incompleted",
+            noTasks: "No tasks here.",
+            highPriority: "High",
+            normalPriority: "Normal",
+            lowPriority: "Low",
+            priority: "Priority",
+            taskName: "Task name",
+            taskDescription: "Task description",
+            create: "Create"
         };
     }
 

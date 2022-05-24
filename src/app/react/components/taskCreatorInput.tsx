@@ -89,7 +89,7 @@ export function TaskCreatorInput() {
                                         marginBottom: "10px",
                                     }}
                                 >
-                                    Task name *
+                                    {lang.taskName}
                                 </Typography>
                                 <Grid container spacing={0}>
                                     <Grid item xs={1} />
@@ -118,7 +118,7 @@ export function TaskCreatorInput() {
                                         marginBottom: "10px",
                                     }}
                                 >
-                                    Task Description
+                                    {lang.taskDescription}
                                 </Typography>
                                 <Grid container spacing={0}>
                                     <Grid item xs={1} />
@@ -148,7 +148,7 @@ export function TaskCreatorInput() {
                                         marginBottom: "10px",
                                     }}
                                 >
-                                    Task Priority *
+                                    {lang.priority}
                                 </Typography>
                                 <Grid container spacing={0}>
                                     <Grid item xs={1} />
@@ -166,17 +166,17 @@ export function TaskCreatorInput() {
                                                 <FormControlLabel
                                                     value={TaskPriority.Low}
                                                     control={<Radio color="primary" />}
-                                                    label="Low"
+                                                    label={lang.lowPriority}
                                                 />
                                                 <FormControlLabel
                                                     value={TaskPriority.Normal}
                                                     control={<Radio color="primary" />}
-                                                    label="Normal"
+                                                    label={lang.normalPriority}
                                                 />
                                                 <FormControlLabel
                                                     value={TaskPriority.High}
                                                     control={<Radio color="primary" />}
-                                                    label="High"
+                                                    label={lang.highPriority}
                                                 />
                                             </RadioGroup>
                                         </FormControl>
@@ -194,7 +194,7 @@ export function TaskCreatorInput() {
                                     margin: "auto",
                                 }}
                             >
-                                Create
+                                {lang.create}
                             </Button>
                         </Grid>
                     </Grid>

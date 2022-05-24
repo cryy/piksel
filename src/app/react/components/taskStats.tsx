@@ -8,6 +8,7 @@ export function TaskStats() {
         services: {
             recoil: { taskStats },
         },
+        lang
     } = useAppContext();
 
     const stats = useRecoilValue(taskStats);
@@ -16,17 +17,17 @@ export function TaskStats() {
         <Grid container spacing={0} margin="24px 0 48px 0">
             <Grid item xs={4} display="flex" justifyContent="center" alignItems="center">
                 <Typography>
-                    <b>{stats.total}</b> total
+                    <b>{stats.total}</b> {lang.total.toLowerCase()}
                 </Typography>
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="center" alignItems="center">
                 <Typography>
-                    <b>{stats.completed}</b> completed
+                    <b>{stats.completed}</b> {lang.completed.toLowerCase()}
                 </Typography>
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="center" alignItems="center">
                 <Typography>
-                    <b>{stats.incompleted}</b> incompleted
+                    <b>{stats.incompleted}</b> {lang.incompleted.toLowerCase()}
                 </Typography>
             </Grid>
         </Grid>
