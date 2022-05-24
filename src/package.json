@@ -1,6 +1,6 @@
 {
     "name": "piksel",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A daily-driver app for students.",
     "main": "./dist/main.js",
     "scripts": {
