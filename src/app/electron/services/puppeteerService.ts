@@ -167,7 +167,7 @@ export class PuppeteerService {
 
     private createWindow() {
         if (this._window === null) {
-            this._window = new BrowserWindow();
+            this._window = new BrowserWindow({ show: false });
         }
     }
 
