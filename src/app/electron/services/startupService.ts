@@ -62,9 +62,6 @@ export class StartupService {
 
         this._iconsPath = path.join(__dirname, this._isDev ? "../build/icons" : "../icons");
 
-        console.log(this._isDev);
-        console.log(this._iconsPath);
-
         this._macNameMap = new Map([
             [20, ["Big Sur", "11"]],
             [19, ["Catalina", "10.15"]],

@@ -109,5 +109,5 @@ export function GradeList() {
         }
     };
 
-    return component;
+    return (component);
 }
