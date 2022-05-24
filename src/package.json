@@ -1,6 +1,6 @@
 {
     "name": "piksel",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A daily-driver app for students.",
     "main": "./dist/main.js",
     "scripts": {
@@ -32,6 +32,7 @@
         "@mui/material": "^5.6.4",
         "electron-better-ipc": "^2.0.1",
         "electron-store": "^8.0.1",
+        "electron-updater": "^5.0.1",
         "glasstron": "^0.1.1",
         "lodash": "^4.17.21",
         "moment": "^2.29.3",

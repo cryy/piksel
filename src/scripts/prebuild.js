@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const package = {
     name: 'piksel',
-    version: '1.0.0',
+    version: '1.0.1',
     license: "GPLV3",
     description: 'An app for students.',
     homepage: 'https://github.com/cryy/piksel',
@@ -17,7 +17,8 @@ const package = {
       moment: '^2.29.3',
       'object-path': '^0.11.8',
       'puppeteer-core': '^14.1.0',
-      'puppeteer-in-electron': '^3.0.5'
+      'puppeteer-in-electron': '^3.0.5',
+      'electron-updater': '^5.0.1'
     },
     devDependencies: {}
   }
