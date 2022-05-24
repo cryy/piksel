@@ -9,9 +9,12 @@ import { RecoilRoot } from "recoil";
 import { ServiceContainer } from "./services";
 import moment from "moment";
 
+// adjust rounding in moment.js
 moment.relativeTimeRounding(Math.floor);
 
+// create a service container for makeshift dependency injection
 const services = new ServiceContainer();
+// root element for react
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
 root.render(

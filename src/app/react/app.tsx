@@ -15,11 +15,12 @@ export interface AppProps {
 export function App(props: AppProps) {
     const { services } = props;
 
+    // global app states
     const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
     const [languageType, setLanguageType] = useState<LanguageType>("en");
 
-    console.log("re-render");
 
+    // context that flows throughout the app
     const ctx: AppContext = {
         services: props.services,
         lang: languageType == "en" ? services.lang.en : services.lang.hr,
@@ -32,6 +33,9 @@ export function App(props: AppProps) {
     ctx.services.config.lang = setLanguageType;
 
     useEffect(() => {
+
+        // changing the color of the scrollbar based on the theme
+
         const rootElement = document.querySelector(":root") as HTMLElement;
 
         if (themeMode === "light") {
