@@ -26,3 +26,8 @@ export * from "./borderedTableCellHeader";
 export * from "./gradeViewerExams";
 export * from "./gradeViewerAbsences";
 export * from "./gradeViewerSchedule";
+export * from "./createTaskButton";
+export * from "./taskStats";
+export * from "./completedTasks";
+export * from "./incompletedTasks";
+export * from "./taskCreatorInput";

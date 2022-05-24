@@ -18,3 +18,5 @@ export * from "./absenceDate";
 export * from "./absences";
 export * from "./schedule";
 export * from "./scheduleDetails";
+export * from "./task";
+export * from "./taskPriority";

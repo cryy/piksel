@@ -11,9 +11,9 @@ export class ServiceContainer {
 
     constructor() {
         this._themeService = new ThemeService();
-        this._recoilService = new RecoilService();
         this._langService = new LangService();
         this._ipcService = new IPCService();
+        this._recoilService = new RecoilService(this._ipcService);
         this._routeService = new RouteService();
         this._configService = new ConfigService(this._ipcService, this._recoilService);
         this._startupService = new StartupService(this._recoilService, this._ipcService, this._configService);

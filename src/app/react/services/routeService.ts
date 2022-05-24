@@ -13,6 +13,7 @@ import {
     Home,
     Reminders,
     Settings,
+    TaskCreator,
     Tasks,
 } from "../routes";
 
@@ -80,6 +81,13 @@ export class RouteService {
                 flags: RouteFlags.Subroute,
                 icon: SchoolRounded,
                 component: GradeViewer,
+            },
+            {
+                name: "createTask",
+                path: "/tasks/create",
+                flags: RouteFlags.Subroute,
+                icon: AssignmentRounded,
+                component: TaskCreator,
             },
         ];
     }

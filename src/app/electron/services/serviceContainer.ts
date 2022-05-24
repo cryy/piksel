@@ -14,7 +14,7 @@ export class ServiceContainer {
         this._config = new ConfigService(this._ipcService);
         this._lang = new LangService(this._config);
         this._puppeteer = new PuppeteerService(this._ipcService, this._config, this._storage);
-        this._startup = new StartupService(this._ipcService, this._lang, this._config, this._puppeteer);
+        this._startup = new StartupService(this._ipcService, this._lang, this._config, this._puppeteer, this._storage);
     }
 
     public get ipc() {

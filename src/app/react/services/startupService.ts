@@ -1,6 +1,6 @@
 import { promiseSetRecoil } from "recoil-outside";
 import { ConfigService, IPCService, RecoilService } from ".";
-import { CarnetUpdateState, Command, EDnevnikDetails, Ready } from "../../ipc";
+import { CarnetUpdateState, Command, EDnevnikDetails, Ready, StoreTasks } from "../../ipc";
 
 
 export class StartupService {
@@ -35,6 +35,9 @@ export class StartupService {
                 d = command.data as EDnevnikDetails;
                 promiseSetRecoil(this._recoil.ednevnik, d);
                 break;
+            case "UPDATE_TASKS":
+                d = command.data as StoreTasks;
+                promiseSetRecoil(this._recoil.tasks, d.tasks);
             default:
                 break;
         }

@@ -6,3 +6,4 @@ export * from "./reminders";
 export * from "./routingContainer";
 export * from "./settings";
 export * from "./tasks";
+export * from "./taskCreator";

@@ -12,13 +12,15 @@ import os from "os";
 import path from "path";
 import url from "url";
 import { ConfigService, IPCService, LangService, PuppeteerService } from ".";
-import { BootFlags, Command, Ready } from "../../ipc";
+import { BootFlags, Command, Ready, StoreTasks } from "../../ipc";
+import { StorageService } from "./storageService";
 
 export class StartupService {
     private _ipc: IPCService;
     private _lang: LangService;
     private _config: ConfigService;
     private _puppeteer: PuppeteerService;
+    private _storage: StorageService;
 
     private _window: BrowserWindow | null;
     private _tray: Tray | null;
@@ -27,15 +29,24 @@ export class StartupService {
     private _started: boolean;
     private _ready: boolean;
 
+    private _isDev: boolean;
+
     private _iconsPath: string;
 
     private _macNameMap: Map<number, string[]>;
 
-    constructor(ipc: IPCService, lang: LangService, config: ConfigService, puppeteer: PuppeteerService) {
+    constructor(
+        ipc: IPCService,
+        lang: LangService,
+        config: ConfigService,
+        puppeteer: PuppeteerService,
+        storage: StorageService
+    ) {
         this._ipc = ipc;
         this._lang = lang;
         this._config = config;
         this._puppeteer = puppeteer;
+        this._storage = storage;
 
         this._window = null;
         this._tray = null;
@@ -44,7 +55,15 @@ export class StartupService {
         this._started = false;
         this._ready = false;
 
-        this._iconsPath = path.join(__dirname, `../build/icons`);
+        const isEnvSet = "ELECTRON_IS_DEV" in process.env;
+        const getFromEnv = Number.parseInt(process.env.ELECTRON_IS_DEV!, 10) === 1;
+
+        this._isDev = isEnvSet ? getFromEnv : !app.isPackaged;
+
+        this._iconsPath = path.join(__dirname, this._isDev ? "../build/icons" : "../icons");
+
+        console.log(this._isDev);
+        console.log(this._iconsPath);
 
         this._macNameMap = new Map([
             [20, ["Big Sur", "11"]],
@@ -214,7 +233,7 @@ export class StartupService {
                 label: this._lang.current.exit,
                 type: "normal",
                 click: () => {
-                    this._window?.close();
+                    app.exit(0);
                 },
             },
         ]);
@@ -281,6 +300,12 @@ export class StartupService {
                 bootFlags: this._bootFlags,
             },
         });
+        this._ipc.send<StoreTasks>({
+            name: "UPDATE_TASKS",
+            data: {
+                tasks: this._storage.getTasks()
+            }
+        });
         this._puppeteer.start();
         this._ready = true;
     }
@@ -315,6 +340,10 @@ export class StartupService {
                 setTimeout(() => {
                     this._window?.show();
                 }, 500);
+                break;
+            case "STORE_TASKS":
+                const tasks = (command.data as StoreTasks).tasks;
+                this._storage.storeTasks(tasks);
                 break;
             default:
                 break;

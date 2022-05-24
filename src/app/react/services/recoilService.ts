@@ -1,8 +1,8 @@
 import { Location } from "react-router-dom";
-import { atom, RecoilState } from "recoil";
+import { atom, RecoilState, RecoilValueReadOnly, selector } from "recoil";
 import { Nullable } from "../../../types/nulllable";
-import { BootFlags, Config, EDnevnikDetails, LoadingPhase } from "../../ipc";
-
+import { BootFlags, Config, EDnevnikDetails, LoadingPhase, StoreTasks, Task } from "../../ipc";
+import { IPCService } from ".";
 
 export interface Breadcrumb {
     name: string;
@@ -11,7 +11,14 @@ export interface Breadcrumb {
     subroute: boolean;
 }
 
+export interface TaskStats {
+    total: number;
+    completed: number;
+    incompleted: number;
+}
+
 export class RecoilService {
+    private _ipc: IPCService;
 
     private _displayLocation: RecoilState<Nullable<Location>>;
     private _config: RecoilState<Nullable<Config>>;
@@ -23,8 +30,13 @@ export class RecoilService {
     private _carnetPassword: RecoilState<string>;
     private _ednevnik: RecoilState<Nullable<EDnevnikDetails>>;
     private _gradeViewerId: RecoilState<string>;
+    private _tasks: RecoilState<Task[]>;
 
-    constructor() {
+    private _taskStats: RecoilValueReadOnly<TaskStats>;
+
+    constructor(ipc: IPCService) {
+        this._ipc = ipc;
+
         const atoms = this.createAtoms();
 
         this._displayLocation = atoms["displayLocation"];
@@ -37,51 +49,92 @@ export class RecoilService {
         this._carnetPassword = atoms["carnetPassword"];
         this._ednevnik = atoms["ednevnik"];
         this._gradeViewerId = atoms["gradeViewerId"];
+        this._tasks = atoms["tasks"];
+
+        const selectors = this.createSelectors();
+
+        this._taskStats = selectors["taskStats"];
+
     }
 
     private createAtoms() {
         return {
             displayLocation: atom({
                 key: "displayLocation",
-                default: null as Nullable<Location>
+                default: null as Nullable<Location>,
             }),
             config: atom({
                 key: "config",
-                default: null as Nullable<Config>
+                default: null as Nullable<Config>,
             }),
             bootFlags: atom({
                 key: "bootFlags",
-                default: BootFlags.None
+                default: BootFlags.None,
             }),
             blur: atom({
                 key: "blur",
-                default: true
+                default: true,
             }),
             activeBreadcrumbs: atom({
                 key: "activeBreadcrumbs",
-                default: [] as Breadcrumb[]
+                default: [] as Breadcrumb[],
             }),
             carnetLoadingPhase: atom({
-               key: "carnetLoadingPhase",
-               default: LoadingPhase.Loaded
+                key: "carnetLoadingPhase",
+                default: LoadingPhase.Loaded,
             }),
             carnetUsername: atom({
                 key: "carnetUsername",
-                default: ""
+                default: "",
             }),
             carnetPassword: atom({
                 key: "carnetPassword",
-                default: ""
+                default: "",
             }),
             ednevnik: atom({
                 key: "ednevnik",
-                default: null as Nullable<EDnevnikDetails>
+                default: null as Nullable<EDnevnikDetails>,
             }),
             gradeViewerId: atom({
                 key: "gradeViewerId",
-                default: ""
-            })
+                default: "",
+            }),
+            tasks: atom({
+                key: "tasks",
+                default: [] as Task[],
+                effects: [
+                    ({ onSet }) => {
+                        onSet((newTasks) => {
+                            this._ipc.send<StoreTasks>({
+                                name: "STORE_TASKS",
+                                data: {
+                                    tasks: newTasks,
+                                },
+                            });
+                        });
+                    },
+                ],
+            }),
         };
+    }
+
+    private createSelectors() {
+        return {
+            taskStats: selector({
+                key: "tasksStats",
+                get: ({ get }) => {
+                    const tasks = get(this._tasks);
+                    const total = tasks.length;
+                    const completed = tasks.filter(x => x.done).length;
+            
+                    return {
+                        total: total,
+                        completed: completed,
+                        incompleted: total - completed
+                    };
+                }
+            })
+        }
     }
 
     public get displayLocation() {
@@ -122,5 +175,13 @@ export class RecoilService {
 
     public get ednevnik() {
         return this._ednevnik;
+    }
+
+    public get tasks() {
+        return this._tasks;
+    }
+
+    public get taskStats() {
+        return this._taskStats;
     }
 }

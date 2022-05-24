@@ -61,6 +61,7 @@ export interface Lang {
     requiresCarnetIntegration: string;
     nextRefresh: string;
     refreshing: string;
+    createTask: string;
 }
 
 export class LangService {
@@ -135,7 +136,8 @@ export class LangService {
             disable: "Isključi",
             requiresCarnetIntegration: "Kako bi ste koristili ovu uslugu, potrebno je uključiti CARNet integraciju u postavkama.",
             nextRefresh: "Osvježavanje podataka",
-            refreshing: "Osvježavanje..."
+            refreshing: "Osvježavanje...",
+            createTask: "Novi zadatak"
         };
     }
 
@@ -202,7 +204,8 @@ export class LangService {
             disable: "Disable",
             requiresCarnetIntegration: "To use this service, you have to enable CARNet integration in the settings.",
             nextRefresh: "Refreshing data",
-            refreshing: "Refreshing..."
+            refreshing: "Refreshing...",
+            createTask: "New task"
         };
     }
 
