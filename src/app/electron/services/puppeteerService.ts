@@ -215,12 +215,24 @@ export class PuppeteerService {
                     `${this._url}${subject.href}`
                 );
 
+                const numberGrades = detailedSubject.gradingElements
+                    .filter((x) => !x.isInclusive)
+                    .flatMap((x) => x.grades)
+                    .filter((x) => x)
+                    .map((x) => x.split(","))
+                    .flatMap((x) => x)
+                    .map((x) => Number(x));
+
+                const average = numberGrades.reduce((a, b) => a + b, 0) / numberGrades.length;
+                const roundedAverage = Math.round((average + Number.EPSILON) * 100) / 100;
+
                 externalSubjects.push({
                     name: subject.subjectName,
                     teacherName: subject.teacherName,
                     href: subject.href,
                     gradingElements: detailedSubject.gradingElements,
                     notes: detailedSubject.notes,
+                    average: roundedAverage,
                 });
             }
 
@@ -229,11 +241,36 @@ export class PuppeteerService {
             const absences = await this.fetchGradeAbsents(page);
             const schedules = await this.fetchGradeSchedule(page);
 
+            const numberGrades = externalSubjects
+                .map((x) => {
+                    const conclusiveGrade = x.gradingElements
+                        .find((x) => x.isInclusive)
+                        ?.grades.at(1)
+                        ?.split("(")
+                        ?.at(1)
+                        ?.slice(0, 1);
+
+                    return conclusiveGrade ? Number(conclusiveGrade) : x.average;
+                })
+                .filter((x) => x);
+            const average = numberGrades.reduce((a, b) => a + b, 0) / numberGrades.length;
+            const roundedAverage = Math.round((average + Number.EPSILON) * 100) / 100;
+
+            const numberGradesBasedOnAverages = externalSubjects
+                .map((x) => x.average)
+                .filter((x) => x);
+            const averageBasedOnAverages =
+                numberGradesBasedOnAverages.reduce((a, b) => a + b, 0) /
+                numberGradesBasedOnAverages.length;
+            const roundedAverageBasedOnAverages = Math.round((averageBasedOnAverages + Number.EPSILON) * 100) / 100;
+
             externalGrades.push({
                 name: grade.name,
                 headroomTeacher: headroomTeacher,
                 schoolName: grade.schoolName,
                 passingGrade: grade.passingGrade,
+                calculatedGrade: roundedAverage,
+                calculatedGradeBasedOnAverages: roundedAverageBasedOnAverages,
                 date: grade.date,
                 href: grade.href,
                 subjects: externalSubjects,
@@ -324,7 +361,6 @@ export class PuppeteerService {
             };
 
             return elements.map((el) => {
-
                 const href = el.getAttribute("href")!;
                 const children = el.children;
 
@@ -360,11 +396,10 @@ export class PuppeteerService {
             ".content > .grades-table > .flex-table.row",
             (elements) => {
                 const normalize = (str: string) => {
-                    return str.trim().replace(/\t/g, "");              
+                    return str.trim().replace(/\t/g, "");
                 };
-            
-                return elements.map((el) => {
 
+                return elements.map((el) => {
                     const children = el.children;
 
                     if (el.classList.contains("final-grade")) {
@@ -392,7 +427,7 @@ export class PuppeteerService {
                             isInclusive: false,
                         };
                     }
-                })
+                });
             }
         );
 

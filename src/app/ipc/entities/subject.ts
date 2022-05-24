@@ -7,4 +7,5 @@ export interface Subject {
     href: string;
     gradingElements: GradingElement[];
     notes: GradingNote[];
+    average: number;
 }

@@ -6,6 +6,8 @@ export interface Grade {
     date: string;
     schoolName: string;
     passingGrade: string;
+    calculatedGrade: number;
+    calculatedGradeBasedOnAverages: number;
     href: string;
     subjects: Subject[];
     notes: GradeNote[];

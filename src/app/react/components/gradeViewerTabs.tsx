@@ -4,7 +4,9 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
+import { GradeViewerAbsences, GradeViewerExams, GradeViewerNotes, GradeViewerSchedule } from ".";
 import { Grade } from "../../ipc";
+import { useAppContext } from "../hooks";
 import { GradeViewerSubjects } from "./gradeViewerSubjects";
 
 
@@ -40,6 +42,9 @@ function TabPanel(props: any) {
 }
 
 export function GradeViewerTabs({ grade }: GradeViewerTabsProps) {
+
+    const { lang } = useAppContext();
+
     const [value, setValue] = useState(0);
 
     const handleChange = (e: any, newValue: number) => {
@@ -63,26 +68,26 @@ export function GradeViewerTabs({ grade }: GradeViewerTabsProps) {
                     },
                 }}
             >
-                <Tab label="Ocjene" id="vertical-tab-0" />
-                <Tab label="Bilješke" id="vertical-tab-1" />
-                <Tab label="Ispiti" id="vertical-tab-2" />
-                <Tab label="Izostanci" id="vertical-tab-3" />
-                <Tab label="Raspored" id="vertical-tab-4" />
+                <Tab label={lang.grades} id="vertical-tab-0" />
+                <Tab label={lang.notes} id="vertical-tab-1" />
+                <Tab label={lang.exams} id="vertical-tab-2" />
+                <Tab label={lang.absences} id="vertical-tab-3" />
+                <Tab label={lang.schedule} id="vertical-tab-4" />
             </Tabs>
             <TabPanel value={value} index={0}>
                 <GradeViewerSubjects grade={grade} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                <GradeViewerNotes grade={grade} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Item Three
+                <GradeViewerExams grade={grade} />
             </TabPanel>
             <TabPanel value={value} index={3}>
-                Item Four
+                <GradeViewerAbsences grade={grade} />
             </TabPanel>
             <TabPanel value={value} index={4}>
-                Item Five
+                <GradeViewerSchedule grade={grade} />
             </TabPanel>
         </>
     );

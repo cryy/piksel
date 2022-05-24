@@ -4,6 +4,7 @@ import {
 import { Box } from "@mui/system";
 import React from "react";
 import { Grade } from "../../ipc";
+import { useAppContext } from "../hooks";
 
 
 export interface GradeViewerDetailsProps {
@@ -11,6 +12,9 @@ export interface GradeViewerDetailsProps {
 }
 
 export function GradeViewerDetails({ grade }: GradeViewerDetailsProps) {
+
+    const { lang } = useAppContext();
+
     return (
         <Box
             sx={{
@@ -42,7 +46,7 @@ export function GradeViewerDetails({ grade }: GradeViewerDetailsProps) {
                 }}
             >
                 <Typography variant="h6">{grade.schoolName}</Typography>
-                <Typography variant="body1">Razrednik/ica: {grade.headroomTeacher}</Typography>
+                <Typography variant="body1">{lang.headroomTeacher}: {grade.headroomTeacher}</Typography>
             </Box>
         </Box>
     );

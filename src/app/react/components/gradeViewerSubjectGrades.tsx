@@ -3,19 +3,21 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    alpha, Paper,
+    alpha,
+    Paper,
     styled,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Typography
+    TableRow,
+    Typography,
 } from "@mui/material";
 import React, { Fragment } from "react";
 import { Subject } from "../../ipc";
 import { useAppContext } from "../hooks";
-
+import { BorderedTableCell, BorderedTableCellHeader } from ".";
 
 export interface GradeViewerSubjectGradesProps {
     subject: Subject;
@@ -23,19 +25,8 @@ export interface GradeViewerSubjectGradesProps {
 
 const months = ["IX", "X", "XI", "XII", "I", "II", "III", "IV", "V", "VI"];
 
-const BorderedTableCell = styled(TableCell)(({ theme }) => ({
-    border: "solid 1px",
-    borderColor: theme.palette.divider,
-    height: "32px",
-}));
-
-const BorderedTableCellHeader = styled(BorderedTableCell)(({ theme }) => ({
-    backgroundColor: alpha(theme.palette.primary.main, 0.32),
-    fontWeight: 600,
-}));
-
 export function GradeViewerSubjectGrades({ subject }: GradeViewerSubjectGradesProps) {
-    const { theme } = useAppContext();
+    const { theme, lang } = useAppContext();
 
     const { gradingElements, notes } = subject;
 
@@ -64,50 +55,56 @@ export function GradeViewerSubjectGrades({ subject }: GradeViewerSubjectGradesPr
             </AccordionSummary>
             <AccordionDetails>
                 {displayGradingElements ? (
-                    <TableContainer component={Paper} sx={{ borderRadius: 0 }}>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    {months.map((month) => (
-                                        <BorderedTableCellHeader align="center" key={month}>
-                                            {month}
-                                        </BorderedTableCellHeader>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {nonInclusive.map((el) => (
-                                    <Fragment key={el.name}>
-                                        <TableRow>
-                                            <BorderedTableCell align="center" colSpan={10}>
-                                                <Typography>{el.name}</Typography>
-                                            </BorderedTableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            {el.grades.map((grade, index) => (
-                                                <BorderedTableCell align="center" key={index}>
-                                                    {grade}
+                    <>
+                        <TableContainer component={Paper} sx={{ borderRadius: 0 }}>
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        {months.map((month) => (
+                                            <BorderedTableCellHeader align="center" key={month}>
+                                                {month}
+                                            </BorderedTableCellHeader>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {nonInclusive.map((el) => (
+                                        <Fragment key={el.name}>
+                                            <TableRow>
+                                                <BorderedTableCell align="center" colSpan={10}>
+                                                    <Typography>{el.name}</Typography>
                                                 </BorderedTableCell>
-                                            ))}
-                                        </TableRow>
-                                    </Fragment>
-                                ))}
-                                <TableRow>
-                                    <BorderedTableCell align="center" colSpan={10}>
-                                        <Typography>ZAKLJUČENO</Typography>
-                                    </BorderedTableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <BorderedTableCell align="center" colSpan={4}>
-                                        {inclusive!.grades[0]}
-                                    </BorderedTableCell>
-                                    <BorderedTableCell align="center" colSpan={6}>
-                                        {inclusive!.grades[1]}
-                                    </BorderedTableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                            </TableRow>
+                                            <TableRow>
+                                                {el.grades.map((grade, index) => (
+                                                    <BorderedTableCell align="center" key={index}>
+                                                        {grade}
+                                                    </BorderedTableCell>
+                                                ))}
+                                            </TableRow>
+                                        </Fragment>
+                                    ))}
+                                    <TableRow>
+                                        <BorderedTableCell align="center" colSpan={10}>
+                                            <Typography>{lang.finalGrade.toUpperCase()}</Typography>
+                                        </BorderedTableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <BorderedTableCell align="center" colSpan={4}>
+                                            {inclusive!.grades[0]}
+                                        </BorderedTableCell>
+                                        <BorderedTableCell align="center" colSpan={6}>
+                                            {inclusive!.grades[1]}
+                                        </BorderedTableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Typography variant="body1">
+                            {lang.gradeAverage}:{" "}
+                            <Typography component="span">{subject.average.toFixed(2)}</Typography>
+                        </Typography>
+                    </>
                 ) : undefined}
                 {displayNotes ? (
                     <>
@@ -117,24 +114,26 @@ export function GradeViewerSubjectGrades({ subject }: GradeViewerSubjectGradesPr
                                 margin: `${displayGradingElements ? "24px" : "0"} 0 12px 0`,
                             }}
                         >
-                            Bilješke
+                            {lang.notes}
                         </Typography>
                         <TableContainer component={Paper} sx={{ borderRadius: 0 }}>
                             <Table size="small">
                                 <TableHead>
                                     <TableRow>
-                                        <BorderedTableCellHeader>Bilješka</BorderedTableCellHeader>
-                                        <BorderedTableCellHeader align="center">
-                                            Datum
+                                        <BorderedTableCellHeader>
+                                            <Typography>{lang.note}</Typography>
                                         </BorderedTableCellHeader>
                                         <BorderedTableCellHeader align="center">
-                                            Ocjena
+                                            <Typography>{lang.date}</Typography>
+                                        </BorderedTableCellHeader>
+                                        <BorderedTableCellHeader align="center">
+                                            <Typography>{lang.grade}</Typography>
                                         </BorderedTableCellHeader>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {notes.map((note) => (
-                                        <TableRow>
+                                    {notes.map((note, index) => (
+                                        <TableRow key={index}>
                                             <BorderedTableCell component="th" scope="row">
                                                 <Typography>{note.details}</Typography>
                                             </BorderedTableCell>
@@ -151,7 +150,7 @@ export function GradeViewerSubjectGrades({ subject }: GradeViewerSubjectGradesPr
                         </TableContainer>
                     </>
                 ) : undefined}
-                {displayNoDetails ? <Typography>Nema unesenih podataka.</Typography> : undefined}
+                {displayNoDetails ? <Typography>{lang.noDataEntered}</Typography> : undefined}
             </AccordionDetails>
         </Accordion>
     );

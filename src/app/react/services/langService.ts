@@ -22,6 +22,42 @@ export interface Lang {
     loggingIn: string;
     finalAverage: string;
     wrongDetails: string;
+    headroomTeacher: string;
+    grades: string;
+    notes: string;
+    exams: string;
+    absences: string;
+    schedule: string;
+    finalGrade: string;
+    note: string;
+    date: string;
+    grade: string;
+    noDataEntered: string;
+    subject: string;
+    justified: string;
+    unjustified: string;
+    waiting: string;
+    total: string;
+    other: string;
+    period: string;
+    status: string;
+    reason: string;
+    morning: string;
+    afternoon: string;
+    mondayShort: string;
+    tuesdayShort: string;
+    wednesdayShort: string;
+    thursdayShort: string;
+    fridayShort: string;
+    saturdayShort: string;
+    gradeAverage: string;
+    calculatedAverage: string;
+    calculatedAverageOnAverages: string;
+    calculatedAverageOnAveragesTooltip: string;
+    signOutOfCarnet: string;
+    signOutOfCarnetExplanation: string;
+    cancel: string;
+    disable: string;
 }
 
 export class LangService {
@@ -57,7 +93,43 @@ export class LangService {
             loginAction: "Prijavi se",
             loggingIn: "Prijavljivanje",
             finalAverage: "Završni prosjek",
-            wrongDetails: "Pogrešna e-pošta ili lozinka"
+            wrongDetails: "Pogrešna e-pošta ili lozinka",
+            headroomTeacher: "Razrednik/ica",
+            grades: "Ocjene",
+            notes: "Bilješke",
+            exams: "Ispiti",
+            absences: "Izostanci",
+            schedule: "Raspored",
+            finalGrade: "Zaključeno",
+            note: "Bilješka",
+            date: "Datum",
+            grade: "Ocjena",
+            noDataEntered: "Nema unesenih podataka.",
+            subject: "Predmet",
+            justified: "Opravdano",
+            unjustified: "Neopravdano",
+            waiting: "Čeka odluku",
+            total: "Ukupno",
+            other: "Ostalo",
+            period: "Sat",
+            status: "Status",
+            reason: "Razlog",
+            morning: "Ujutro",
+            afternoon: "Popodne",
+            mondayShort: "Pon",
+            tuesdayShort: "Uto",
+            wednesdayShort: "Sri",
+            thursdayShort: "Čet",
+            fridayShort: "Pet",
+            saturdayShort: "Sub",
+            gradeAverage: "Prosjek ocjena",
+            calculatedAverage: "Izračunati prosjek",
+            calculatedAverageOnAverages: "Izračunati prosjek (R)",
+            calculatedAverageOnAveragesTooltip: "R označava \"Raw\". Ovaj prosjek je izračunat koristeći samo prosjeke predmeta, bez zaključenih ocjena.",
+            signOutOfCarnet: "Isključiti CARNet integraciju?",
+            signOutOfCarnetExplanation: "Isključivanje CARNet integracije će vas odjaviti iz CARNet sistema i nećete moći pristupiti eDnevnik usluzi u piksel aplikaciji.",
+            cancel: "Odustani",
+            disable: "Isključi"
         };
     }
 
@@ -85,7 +157,43 @@ export class LangService {
             loginAction: "Login",
             loggingIn: "Logging in",
             finalAverage: "Final average",
-            wrongDetails: "Wrong e-mail or password"
+            wrongDetails: "Wrong e-mail or password",
+            headroomTeacher: "Headroom teacher",
+            grades: "Grades",
+            notes: "Notes",
+            exams: "Exams",
+            absences: "Absences",
+            schedule: "Schedule",
+            finalGrade: "Final grade",
+            note: "Note",
+            date: "Date",
+            grade: "Grade",
+            noDataEntered: "No data entered.",
+            subject: "Subject",
+            justified: "Justified",
+            unjustified: "Unjustified",
+            waiting: "Waiting decision",
+            total: "Total",
+            other: "Other",
+            period: "Period",
+            status: "Status",
+            reason: "Reason",
+            morning: "Morning",
+            afternoon: "Afternoon",
+            mondayShort: "Mon",
+            tuesdayShort: "Tue",
+            wednesdayShort: "Wed",
+            thursdayShort: "Thu",
+            fridayShort: "Fri",
+            saturdayShort: "Sat",
+            gradeAverage: "Average grade",
+            calculatedAverage: "Calculated average",
+            calculatedAverageOnAverages: "Calculated average (R)",
+            calculatedAverageOnAveragesTooltip: "R denotes \"Raw\". This average is calculated using only averages of your subjects, without using your final grade.",
+            signOutOfCarnet: "Disable CARNet integration?",
+            signOutOfCarnetExplanation: "Turning off CARNet integration will sign you out of the CARNet system. You won't be able to access eDnevnik in the piksel app.",
+            cancel: "Cancel",
+            disable: "Disable"
         };
     }
 
