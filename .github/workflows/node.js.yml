@@ -45,8 +45,10 @@ jobs:
         run: npm install -g node-gyp
       - name: Run prebuild script
         run: cd src && node ./scripts/prebuild.js && cd ../
+      - name: Install electron-builder
+        run: npm install -g electron-builder
       - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1.6.0
+        uses: cryy/action-electron-builder@v1.7.0
         with:
           package_root: ./src
           github_token: ${{ secrets.github_token }}
