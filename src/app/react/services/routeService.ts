@@ -1,5 +1,20 @@
-import { AssignmentRounded, HomeRounded, NotificationsRounded, SchoolRounded, SettingsApplicationsRounded, SvgIconComponent } from "@mui/icons-material";
-import { CarnetIntegration, EDnevnik, GradeViewer, Home, Reminders, Settings, Tasks } from "../routes";
+import {
+    AssignmentRounded,
+    HomeRounded,
+    NotificationsRounded,
+    SchoolRounded,
+    SettingsApplicationsRounded,
+    SvgIconComponent,
+} from "@mui/icons-material";
+import {
+    CarnetIntegration,
+    EDnevnik,
+    GradeViewer,
+    Home,
+    Reminders,
+    Settings,
+    Tasks,
+} from "../routes";
 
 export interface Route {
     name: string;
@@ -12,7 +27,7 @@ export interface Route {
 export enum RouteFlags {
     Null = 0,
     Subroute = 1 << 0,
-    NoBreadcrum = 1 << 1
+    NoBreadcrum = 1 << 1,
 }
 
 export class RouteService {
@@ -29,7 +44,7 @@ export class RouteService {
                 path: "/",
                 flags: RouteFlags.NoBreadcrum,
                 icon: HomeRounded,
-                component: Home
+                component: Home,
             },
             {
                 name: "tasksPage",
@@ -39,18 +54,13 @@ export class RouteService {
                 component: Tasks,
             },
             {
-                name: "remindersPage",
-                path: "/reminders",
-                flags: RouteFlags.Null,
-                icon: NotificationsRounded,
-                component: Reminders,
-            },            {
                 name: "ednevnikPage",
                 path: "/ednevnik",
                 flags: RouteFlags.Null,
                 icon: SchoolRounded,
                 component: EDnevnik,
-            },            {
+            },
+            {
                 name: "settingsPage",
                 path: "/settings",
                 flags: RouteFlags.Null,
@@ -62,16 +72,16 @@ export class RouteService {
                 path: "/settings/carnet",
                 flags: RouteFlags.Subroute,
                 icon: SettingsApplicationsRounded,
-                component: CarnetIntegration
+                component: CarnetIntegration,
             },
             {
                 name: "gradeViewer",
                 path: "/ednevnik/gradeViewer",
                 flags: RouteFlags.Subroute,
                 icon: SchoolRounded,
-                component: GradeViewer
-            }
-        ]
+                component: GradeViewer,
+            },
+        ];
     }
 
     public get routes() {
