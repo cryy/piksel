@@ -25,8 +25,8 @@ export function SideBar() {
     const useBlurValues = (flags & BootFlags.BlurSupported) === BootFlags.BlurSupported && useBlur;
 
     if (useBlurValues) {
-        light = "#ffffffc2";
-        dark = "#25272ec6";
+        light = "#ffffff9c";
+        dark = "#25272ead";
     }
 
     const backgroundColor = mode == "light" ? light : dark;
