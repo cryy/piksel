@@ -1,9 +1,9 @@
-import { Checkbox, Divider, Grid, IconButton, Paper, Tooltip, Typography } from "@mui/material";
-import React from "react";
+import { Checkbox, Divider, Grid, Grow, IconButton, Paper, Tooltip, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { Grade, Task, TaskPriority } from "../../ipc";
 import { useAppContext } from "../hooks";
 import { CloseRounded, WarningRounded } from "@mui/icons-material";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { Lang } from "../services";
 
 export function getPriorityString(priority: TaskPriority, lang: Lang) {
@@ -33,6 +33,12 @@ export interface TaskPreviewProps {
     onClick?: () => void;
 }
 
+enum TaskState {
+    Default,
+    Deleted,
+    Checked
+}
+
 export function TaskPreview({ task, onClick }: TaskPreviewProps) {
     const {
         lang,
@@ -40,102 +46,136 @@ export function TaskPreview({ task, onClick }: TaskPreviewProps) {
         services: { recoil },
     } = useAppContext();
 
-    const [tasks, setTasks] = useRecoilState(recoil.tasks);
-    const taskIndex = tasks.findIndex((t) => t.id === task.id);
+    const [taskState, setTaskState] = useState(TaskState.Default);
+    const setTasks = useSetRecoilState(recoil.tasks);
+
+    const shouldGrowIn = taskState === TaskState.Default;
 
     const deleteTask = (e: any) => {
         e.stopPropagation();
-        setTasks([...tasks.slice(0, taskIndex), ...tasks.slice(taskIndex + 1)]);
+        setTaskState(TaskState.Deleted);
     };
 
     const checkTask = (e: any) => {
         e.stopPropagation();
-        setTasks([
-            ...tasks.slice(0, taskIndex),
-            { ...task, done: !task.done },
-            ...tasks.slice(taskIndex + 1),
-        ]);
+        setTaskState(TaskState.Checked);
+    };
+
+    const setCheckedTask = () => {
+        setTasks((tasks) => {
+            const taskIndex = tasks.findIndex((t) => t.id === task.id);
+
+            return [
+                ...tasks.slice(0, taskIndex),
+                { ...task, done: !task.done },
+                ...tasks.slice(taskIndex + 1),
+            ];
+        });
+    };
+
+    const setDeletedTask = () => {
+        setTasks((tasks) => {
+            const taskIndex = tasks.findIndex((t) => t.id === task.id);
+            return [...tasks.slice(0, taskIndex), ...tasks.slice(taskIndex + 1)];
+        });
+    };
+
+    const handleTransitionEnd = (e: any) => {
+        switch(taskState) {
+            case TaskState.Deleted:
+                setDeletedTask();
+                break;
+            case TaskState.Checked:
+                setCheckedTask();
+                break;
+            default:
+                break;
+        }  
     };
 
     return (
-        <Paper
-            sx={{
-                width: "246px",
-                height: "220px",
-                cursor: "pointer",
-            }}
-            onClick={onClick}
-        >
-            <Grid
-                container
-                spacing={0}
+        <Grow in={shouldGrowIn} onTransitionEnd={handleTransitionEnd}>
+            <Paper
                 sx={{
-                    margin: "24px 0",
-                    height: "calc(100% - 24px)",
+                    width: "246px",
+                    height: "220px",
+                    cursor: "pointer",
                 }}
+                onClick={onClick}
             >
-                <Grid item xs={1} />
                 <Grid
-                    item
-                    xs={10}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height="128px"
+                    container
+                    spacing={0}
+                    sx={{
+                        margin: "24px 0",
+                        height: "calc(100% - 24px)",
+                    }}
                 >
-                    <Typography
-                        variant="body1"
-                        sx={task.done ? { textDecoration: "line-through" } : undefined}
+                    <Grid item xs={1} />
+                    <Grid
+                        item
+                        xs={10}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        height="128px"
                     >
-                        {task.name}
-                    </Typography>
-                </Grid>
-                <Grid item xs={1} />
-                <Grid item xs={12} display="flex" alignItems="center">
-                    <Divider
-                        sx={{
-                            width: "100%",
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={1} />
-                <Grid item xs={10}>
-                    <Grid container spacing={0}>
-                        <Grid
-                            item
-                            xs={4}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
+                        <Typography
+                            variant="body1"
+                            sx={task.done ? { textDecoration: "line-through" } : undefined}
                         >
-                            <Tooltip title={`${getPriorityString(task.priority, lang)}`}>
-                                <WarningRounded sx={{ color: getPriorityStyling(task.priority) }} />
-                            </Tooltip>
-                        </Grid>
-                        <Grid
-                            item
-                            xs={4}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <Checkbox color="primary" checked={task.done} onClick={checkTask} />
-                        </Grid>
-                        <Grid
-                            item
-                            xs={4}
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
-                        >
-                            <IconButton onClick={deleteTask}>
-                                <CloseRounded />
-                            </IconButton>
+                            {task.name}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={1} />
+                    <Grid item xs={12} display="flex" alignItems="center">
+                        <Divider
+                            sx={{
+                                width: "100%",
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={1} />
+                    <Grid item xs={10}>
+                        <Grid container spacing={0}>
+                            <Grid
+                                item
+                                xs={4}
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Tooltip title={`${getPriorityString(task.priority, lang)}`}>
+                                    <WarningRounded
+                                        sx={{ color: getPriorityStyling(task.priority) }}
+                                    />
+                                </Tooltip>
+                            </Grid>
+                            <Grid
+                                item
+                                xs={4}
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Checkbox color="primary" checked={task.done} onClick={checkTask} />
+                            </Grid>
+                            <Grid
+                                item
+                                xs={4}
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <IconButton onClick={deleteTask}>
+                                    <CloseRounded />
+                                </IconButton>
+                            </Grid>
                         </Grid>
                     </Grid>
+                    <Grid item xs={1} />
                 </Grid>
-                <Grid item xs={1} />
-            </Grid>
-        </Paper>
+            </Paper>
+        </Grow>
     );
 }
