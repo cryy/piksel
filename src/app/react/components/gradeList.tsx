@@ -48,6 +48,15 @@ export function GradeList() {
             channel: "PUPPETEER",
         });
     };
+    
+    const handleClick = (href: string) => {
+        const id = href.split("/").at(-2) ?? "";
+        if (id) {
+            setId(id);
+            navigator("/ednevnik/gradeViewer");
+        }
+    };
+
 
     let component = null;
 
@@ -101,13 +110,6 @@ export function GradeList() {
         );
     }
 
-    const handleClick = (href: string) => {
-        const id = href.split("/").at(-2) ?? "";
-        if (id) {
-            setId(id);
-            navigator("/ednevnik/gradeViewer");
-        }
-    };
 
-    return (component);
+    return component
 }
