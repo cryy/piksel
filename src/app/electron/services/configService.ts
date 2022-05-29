@@ -21,10 +21,18 @@ export class ConfigService {
         this._communicationChannel = "CONFIG";
 
         this._schema = this.createSchema();
-        this._store = new Store<Config>({
+
+        const options = {
             schema: this._schema,
             clearInvalidConfig: true,
-        });
+            projectVersion: "1.0.3",
+            migrations: {
+                "1.0.3": (store: Store<Config>) => {
+                    store.set("developerMode", false);
+                }
+            }
+        }
+        this._store = new Store<Config>(options as any);
 
         this._window = null;
 
@@ -63,6 +71,10 @@ export class ConfigService {
                 type: "string",
                 default: "",
             },
+            developerMode: {
+                type: "boolean",
+                default: false
+            }
         };
     }
 

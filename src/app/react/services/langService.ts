@@ -72,6 +72,10 @@ export interface Lang {
     taskName: string;
     taskDescription: string;
     create: string;
+    developerMode: string;
+    enable: string;
+    enableDeveloperMode: string;
+    enableDeveloperModeExplanation: string;
 }
 
 export class LangService {
@@ -157,7 +161,11 @@ export class LangService {
             priority: "Važnost",
             taskName: "Ime zadatka",
             taskDescription: "Opis zadatka",
-            create: "Kreiraj"
+            create: "Kreiraj",
+            developerMode: "Način rada za programere",
+            enable: "Uključi",
+            enableDeveloperMode: "Uključiti način rada za programere?",
+            enableDeveloperModeExplanation: "Uključite ovaj način rada samo ako znate što radite, možete prekinuti rad aplikacije u protivnom."
         };
     }
 
@@ -235,7 +243,11 @@ export class LangService {
             priority: "Priority",
             taskName: "Task name",
             taskDescription: "Task description",
-            create: "Create"
+            create: "Create",
+            developerMode: "Developer mode",
+            enable: "Enable",
+            enableDeveloperMode: "Enable developer mode?",
+            enableDeveloperModeExplanation: "Turn on this mode only if you know what you're doing, you can break the application otherwise."
         };
     }
 

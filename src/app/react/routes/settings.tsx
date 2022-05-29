@@ -1,19 +1,18 @@
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { SettingList } from "../components";
 import { useAppContext } from "../hooks";
 
-
 export function Settings() {
-
     const {
         services: {
-            recoil: { displayLocation, activeBreadcrumbs },
+            recoil: { displayLocation, activeBreadcrumbs, developerMode },
         },
     } = useAppContext();
 
     const location = useRecoilValue(displayLocation);
+    const devMode = useRecoilValue(developerMode);
     const setBreadcrumbs = useSetRecoilState(activeBreadcrumbs);
 
     React.useEffect(() => {
@@ -23,17 +22,22 @@ export function Settings() {
                     name: "settingsPage",
                     link: "/settings",
                     useLang: true,
-                    subroute: false
+                    subroute: false,
                 },
             ]);
         }
     }, [location]);
-    
+
     return (
         <Grid container spacing={0}>
             <Grid item xs={1} />
             <Grid item xs={10}>
                 <Grid container spacing={2}>
+                    {devMode && (
+                        <Grid item xs={12}>
+                            <Typography variant="body1">v1.0.3</Typography>
+                        </Grid>
+                    )}
                     <SettingList />
                 </Grid>
             </Grid>

@@ -167,7 +167,7 @@ export class PuppeteerService {
 
     private createWindow() {
         if (this._window === null) {
-            this._window = new BrowserWindow({ show: false });
+            this._window = new BrowserWindow({ show: this._config.store.developerMode });
         }
     }
 

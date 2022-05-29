@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const package = {
     name: 'piksel',
-    version: '1.0.2',
+    version: '1.0.3',
     license: "GPLV3",
     description: 'An app for students.',
     homepage: 'https://github.com/cryy/piksel',

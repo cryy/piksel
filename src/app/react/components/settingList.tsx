@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import { SettingBlur, SettingCarnet, SettingLang, SettingTheme } from ".";
+import { SettingBlur, SettingCarnet, SettingDeveloperMode, SettingLang, SettingTheme } from ".";
 
 
 export interface SettingListItemProps {
@@ -29,6 +29,9 @@ export function SettingList() {
             </SettingListItem>
             <SettingListItem>
                 <SettingCarnet />
+            </SettingListItem>
+            <SettingListItem>
+                <SettingDeveloperMode />
             </SettingListItem>
         </>
     );

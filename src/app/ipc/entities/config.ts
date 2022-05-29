@@ -7,4 +7,5 @@ export interface Config {
     blur: boolean;
     carnetUsername: string;
     carnetPassword: string;
+    developerMode: boolean;
 }

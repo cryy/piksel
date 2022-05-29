@@ -32,6 +32,7 @@ export class RecoilService {
     private _gradeViewerId: RecoilState<string>;
     private _tasks: RecoilState<Task[]>;
     private _openTaskId: RecoilState<Nullable<number>>;
+    private _developerMode: RecoilState<boolean>;
 
     private _taskStats: RecoilValueReadOnly<TaskStats>;
 
@@ -52,6 +53,7 @@ export class RecoilService {
         this._gradeViewerId = atoms["gradeViewerId"];
         this._tasks = atoms["tasks"];
         this._openTaskId = atoms["openTaskId"];
+        this._developerMode = atoms["developerMode"];
 
         const selectors = this.createSelectors();
 
@@ -120,6 +122,10 @@ export class RecoilService {
             openTaskId: atom({
                 key: "openTaskId",
                 default: null as Nullable<number>
+            }),
+            developerMode: atom({
+                key: "developerMode",
+                default: false
             })
         };
     }
@@ -193,5 +199,9 @@ export class RecoilService {
 
     public get openTaskId() {
         return this._openTaskId;
+    }
+
+    public get developerMode() {
+        return this._developerMode;
     }
 }
