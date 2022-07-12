@@ -31,11 +31,6 @@ export function Settings() {
     return (
         <Grid container spacing={0}>
             <Grid item xs={1} />
-            {devMode && (
-                <Grid item xs={12}>
-                    <Typography variant="body1">v1.0.3</Typography>
-                </Grid>
-            )}
             <Grid item xs={10}>
                 <Grid container spacing={2}>
                     <SettingList />

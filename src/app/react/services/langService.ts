@@ -76,6 +76,8 @@ export interface Lang {
     enable: string;
     enableDeveloperMode: string;
     enableDeveloperModeExplanation: string;
+    appVersion: string;
+    createNewTask: string;
 }
 
 export class LangService {
@@ -165,7 +167,9 @@ export class LangService {
             developerMode: "Način rada za programere",
             enable: "Uključi",
             enableDeveloperMode: "Uključiti način rada za programere?",
-            enableDeveloperModeExplanation: "Uključite ovaj način rada samo ako znate što radite, možete prekinuti rad aplikacije u protivnom."
+            enableDeveloperModeExplanation: "Uključite ovaj način rada samo ako znate što radite, možete prekinuti rad aplikacije u protivnom.",
+            appVersion: "Verzija",
+            createNewTask: "Dodaj novi zadatak"
         };
     }
 
@@ -247,7 +251,9 @@ export class LangService {
             developerMode: "Developer mode",
             enable: "Enable",
             enableDeveloperMode: "Enable developer mode?",
-            enableDeveloperModeExplanation: "Turn on this mode only if you know what you're doing, you can break the application otherwise."
+            enableDeveloperModeExplanation: "Turn on this mode only if you know what you're doing, you can break the application otherwise.",
+            appVersion: "Version",
+            createNewTask: "Create new task"
         };
     }
 

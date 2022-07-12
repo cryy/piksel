@@ -1,19 +1,14 @@
 import { AddCircleRounded } from "@mui/icons-material";
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-    IncompletedTasks,
-    CompletedTasks,
-    CreateTaskButton,
-    TaskStats,
-    TaskViewer,
-} from "../components";
+import { IncompletedTasks, CompletedTasks, TaskStats, TaskViewer } from "../components";
 import { useAppContext } from "../hooks";
 import { useNavigate } from "react-router-dom";
 
 export function Tasks() {
     const {
+        lang,
         services: {
             recoil: { displayLocation, activeBreadcrumbs },
         },
@@ -55,9 +50,15 @@ export function Tasks() {
                             flexDirection="column"
                             alignItems="center"
                         >
-                            <CreateTaskButton color="primary" onClick={handleClick}>
-                                <AddCircleRounded />
-                            </CreateTaskButton>
+                            <Button
+                                variant="contained"
+                                onClick={handleClick}
+                                sx={{
+                                    width: "80%",
+                                }}
+                            >
+                                {lang.createNewTask}
+                            </Button>
                             <TaskStats />
                         </Grid>
                         <Grid item xs={12} marginBottom="64px">
