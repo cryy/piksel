@@ -16,7 +16,7 @@
 ## About
 Piksel is an application made in [Electron](https://github.com/electron/electron) in order to help students with their hectic life and schedule.
 
-Piksel provides features like [eDnevnik](https://ocjene.skole.hr/) integration and tracking your tasks for the day.
+Piksel provides features like [eDnevnik](https://ocjene.skole.hr/) integration and tracking your tasks for the day while allowing you to tune the app to your liking. More to come!
 
 ## Screenshots
 <details>

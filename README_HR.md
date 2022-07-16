@@ -16,7 +16,7 @@
 ## O projektu
 Piksel je aplikacija napravljena pomoću [Electrona](https://github.com/electron/electron) kako bi se pomoglo učenicima i studentima s njihovim životom i rasporedom.
 
-Piksel nudi značajke poput [eDnevnik](https://ocjene.skole.hr/) integracije i praćenje vaših zadataka za određeni dan.
+Piksel nudi značajke poput [eDnevnik](https://ocjene.skole.hr/) integracije i praćenje vaših zadataka za određeni dan. Također možete prilagoditi aplikaciju vašem ukusu.
 
 ## Snimke zaslona programa
 <details>
