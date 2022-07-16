@@ -36,7 +36,7 @@ Run `npm run dev` or `npm run prod` depending on which environment you want the 
 
 Running `npm start` will tell electron to start the app.
 
-Packaging the app is done through [Electron Builder](https://www.electron.build/). For more information on how the pacaking works, check out the [GitHub workflow](https://github.com/cryy/piksel/blob/main/.github/workflows/node.js.yml).
+Packaging the app is done through [Electron Builder](https://www.electron.build/). For more information on how the packaging works, check out the [GitHub workflow](https://github.com/cryy/piksel/blob/main/.github/workflows/node.js.yml).
 
 
 
