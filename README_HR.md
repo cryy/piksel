@@ -1,6 +1,6 @@
 <div align="center">
+    <img src="./media/logo.png" />
     <h1>
-        <img src="./media/logo.png" width="64px" align="center" />
         piksel
     </h1>
     <a href="https://github.com/cryy/piksel">EN</a> | <b>HR</b>
