@@ -1,19 +1,17 @@
 <div align="center">
-    <img src="./media/logo.png" width="200px" />
+    <img src="./media/logo.png" />
     <h1>
         piksel
     </h1>
-    <b>EN</b> | <a href="https://github.com/cryy/piksel/blob/main/README_HR.md">HR</a>
+    <b>EN</b> | <a href="./README_HR.md">HR</a>
     <p>
         A daily-driver app for students.
     </p>
-    <br />
 
 [![GitHub Release](https://img.shields.io/github/v/release/cryy/piksel?style=for-the-badge)](https://github.com/cryy/piksel/releases/latest)
 [![Star](https://img.shields.io/github/stars/cryy/piksel?style=for-the-badge)](https://github.com/cryy/piksel/)
 
 </div>
-<br />
 
 ## About
 Piksel is an application made in [Electron](https://github.com/electron/electron) in order to help students with their hectic life and schedule.
