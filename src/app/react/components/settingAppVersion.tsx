@@ -12,7 +12,7 @@ export function SettingAppVersion() {
 
     return (
         <SettingContainer name={lang.appVersion}>
-            <Typography variant="body1">v1.0.3</Typography>
+            <Typography variant="body1">v1.1.0</Typography>
         </SettingContainer>
     );
 }

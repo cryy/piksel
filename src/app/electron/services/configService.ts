@@ -25,7 +25,7 @@ export class ConfigService {
         const options = {
             schema: this._schema,
             clearInvalidConfig: true,
-            projectVersion: "1.0.3",
+            projectVersion: "1.1.0",
             migrations: {
                 "1.0.3": (store: Store<Config>) => {
                     store.set("developerMode", false);
