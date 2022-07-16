@@ -3,7 +3,7 @@
     <h1>
         piksel
     </h1>
-    <a href="./README.md">EN</a> | <b>HR</b>
+    <a href="https://github.com/cryy/piksel">EN</a> | <b>HR</b>
     <p>
          Aplikacija za dnevno korištenje namijenjena učenicima i studentima. 
     </p>
