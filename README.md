@@ -1,6 +1,6 @@
 <div align="center">
-    <img src="./media/logo.png" />
     <h1>
+        <img src="./media/logo.png" width="64px" align="center" />
         piksel
     </h1>
     <b>EN</b> | <a href="./README_HR.md">HR</a>
